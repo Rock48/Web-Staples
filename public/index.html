@@ -1,0 +1,132 @@
+<html>
+
+<head>
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+    <link href="css/material-wfont.min.css" rel="stylesheet">
+
+    <style>
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .menu li {
+            padding: 1em;
+            cursor: default;
+        }
+        .menu li.active {
+            background-color: dodgerblue;
+        }
+        .pages {
+            top:0;
+            right:0;
+            z-index: 1;
+        }
+        .page {
+            position: absolute;
+            width: 100%;
+            padding-bottom: 1em;
+            -webkit-transform: translateY(-150%);
+            z-index: 1;
+        }
+        .page.active {
+            -webkit-transform: translateY(0px);
+            -webkit-transition: transform .75s ease-out;
+        }
+        .notes {
+            font-size: 24px;
+        }
+        .app-header {
+            z-index: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Your site -->
+    <br />
+    <div class="container">
+        <div class="center-block well app-header">
+            <h1>Web Planner and Scheduler</h1>
+        </div>
+        <div class="row">
+            <div class="menu col-xs-4 well">
+                <ul>
+                    <li class="active withripple" data-target="#class1">Class 1</li>
+                    <li class="withripple" data-target="#class2">Class 2</li>
+                    <li class="withripple" data-target="#class3">Class 3</li>
+                    <li class="withripple" data-target="#class4">Class 4</li>
+                    <li class="withripple" data-target="#class5">Class 5</li>
+                    <li class="withripple" data-target="#class6">Class 6</li>
+                    <li class="withripple" data-target="#class7">Class 7</li>
+                </ul>
+            </div>
+                <div class="pages col-xs-8">
+                    <div class="well page active" id="class1">
+                        <h1>Class 1</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class2">
+                        <h1>Class 2</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class3">
+                        <h1>Class 3</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class4">
+                        <h1>Class 4</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class5">
+                        <h1>Class 5</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class6">
+                        <h1>Class 6</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                    <div class="well page" id="class7">
+                        <h1>Class 7</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- Your site ends -->
+
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.material.init();
+        });
+
+        $(".menu li").click(function() {
+
+            if($(this).is('.active')) return;
+            $(".menu li").removeClass("active");
+
+            $(this).addClass("active");
+
+            var target = $($(this).data('target'));
+            target.show();
+            var oldPage = $('.page.active');
+            oldPage.fadeOut(400);
+
+            setTimeout(function() {
+                oldPage.removeClass('active');
+                oldPage.show();
+                target.addClass('active');
+            }, 600);
+
+        });
+    </script>
+</body>
+
+</html>
