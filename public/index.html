@@ -26,25 +26,28 @@
         .pages {
             top:0;
             left:0;
+            height: 33em;
             z-index: 1;
         }
         .page {
             overflow: auto;
             position: absolute;
-            width: 94%;
+            width: 98%;
+            height: 32em;
             padding-bottom: 1em;
             -webkit-transform: translateX(300%);
+            -webkit-transition: transform .6s ease-in;
             z-index: 1;
         }
         .page.active {
-            -webkit-transform: translateX(0px);
+            -webkit-transform: translateX(0);
             -webkit-transition: transform .6s ease-out;
         }
         .notes {
             font-size: 24px;
         }
-        .app-header {
-            z-index: 0;
+        .timer-block {
+            /*margin-top: 0em;*/
         }
     </style>
 
@@ -54,8 +57,10 @@
     <!-- Your site -->
     <br />
     <div class="container">
-        <div class="well app-header">
+        <div class="row">
+        <div class="well">
             <h1>Web Planner and Scheduler</h1>
+        </div>
         </div>
         <div class="row">
             <div class="menu col-sm-4 well">
@@ -66,41 +71,59 @@
                     <li class="withripple" data-target="#class4">Class 4</li>
                     <li class="withripple" data-target="#class5">Class 5</li>
                     <li class="withripple" data-target="#class6">Class 6</li>
-                    <li class="withripple" data-target="#class7">Class 7</li>
                 </ul>
             </div>
                 <div class="pages col-sm-8">
                     <div class="well page active" id="class1">
                         <h1>Class 1</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
+                        <a class="btn btn-fab btn-info">
+                            <span class="mdi-action-assignment"></span>
+                        </a>
+                        <a class="btn btn-fab btn-success">
+                            <span class="mdi-action-assignment-turned-in"></span>
+                        </a>
+                        <a class="btn btn-fab btn-danger">
+                            <span class="mdi-action-assignment-late"></span>
+                        </a>
                     </div>
                     <div class="well page" id="class2" style="display: none;">
                         <h1>Class 2</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                     <div class="well page" id="class3" style="display: none;">
                         <h1>Class 3</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                     <div class="well page" id="class4" style="display: none;">
                         <h1>Class 4</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                     <div class="well page" id="class5" style="display: none;">
                         <h1>Class 5</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                     <div class="well page" id="class6" style="display: none;">
                         <h1>Class 6</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
-                    </div>
-                    <div class="well page" id="class7" style="display: none;">
-                        <h1>Class 7</h1>
-                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                 </div>
         </div>
+        <div class="row well timer-block">
+            <h1 id="timerHeader"></h1>
+            <p>
+                <span id="startTime">0:00</span>
+                <span class="text-right" id="endTime">0:00</span>
+                <span id="currentTime">0:00</span>
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-material-blue" id="classProgress" style="width: 0%"></div>
+                </div>
+            </p>
+        </div>
     </div>
+
+
+
     <!-- Your site ends -->
 
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -109,24 +132,98 @@
     <script src="js/ripples.min.js"></script>
     <script src="js/material.min.js"></script>
     <script>
+
+        schedule = [
+            {
+                name: 'Programming',
+                timeStart: 27000,
+                timeEnd: 30000
+            },
+            {
+                name: 'Algebra 2A',
+                timeStart: 30300,
+                timeEnd: 35100
+            },
+            {
+                name: "Chemistry A",
+                timeStart: 35400,
+                timeEnd: 38400
+            },
+            {
+                name: "English 2A",
+                timeStart: 38700,
+                timeEnd: 44700
+            },
+            {
+                name: "Free",
+                timeStart: 43200,
+                timeEnd: 47700
+            },
+            {
+                name: "US History A",
+                timeStart: 48000,
+                timeEnd: 51300
+            }
+        ];
+
         $(document).ready(function() {
             $.material.init();
+            var i = 0;
+            $('.page').each(function() {
+                var cls = schedule[i];
+                $(this).find('h1').first().text(cls.name);
+                i++;
+            });
+            i = 0;
+            $('.menu li').each(function(){
+                var cls = schedule[i];
+                $(this).text(cls.name);
+                i++;
+            });
+
+            var progressLoop = setInterval(function(){
+                var now = new Date(),
+                then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                var secsSinceMidnight = (now.getTime() - then.getTime())/1000;
+                var currentClass = null;
+                for(var classId = 0; classId < schedule.length; classId++) {
+                    if(schedule[classId].timeStart < secsSinceMidnight && secsSinceMidnight < schedule[classId].timeEnd) {
+                        currentClass = schedule[classId];
+                        break;
+                    }
+                }
+                if(currentClass != null) {
+                    $("#timerHeader").text(currentClass.name);
+                    var percentComplete = (secsSinceMidnight - schedule[classId].timeStart)/(schedule[classId].timeEnd - schedule[classId].timeStart);
+                    $("#classProgress").css('width', percentComplete*100 + '%');
+
+                    totalMins = Math.floor(secsSinceMidnight/60);
+                    hour = Math.floor(totalMins/60);
+                    min = totalMins%hour;
+                    min = (min < 10 ? min : "0" + min);
+
+
+                    $("#currentTime").text( hour + ":" + min);
+                }
+            }, 1000);
         });
+
+
 
         $(".menu li").click(function() {
 
             if($(this).is('.active')) return;
             $(".menu li").removeClass("active");
-
             $(this).addClass("active");
 
             var target = $($(this).data('target'));
-            target.show();
+
             var oldPage = $('.page.active');
+            oldPage.removeClass('active');
             oldPage.fadeOut(400);
 
             setTimeout(function() {
-                oldPage.removeClass('active');
+                target.fadeIn();
                 target.addClass('active');
             }, 400);
 

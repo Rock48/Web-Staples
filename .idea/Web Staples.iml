@@ -33,6 +33,8 @@
     <orderEntry type="library" scope="PROVIDED" name="rack-protection (v1.5.3, ruby-1.9.3-p448) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sinatra (v1.4.5, ruby-1.9.3-p448) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="tilt (v1.4.1, ruby-1.9.3-p448) [gem]" level="application" />
+    <orderEntry type="library" name="jquery-1.10.2" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
   </component>
 </module>
 
