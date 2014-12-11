@@ -1,12 +1,17 @@
 <html>
 
 <head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8, user-scalable=0"/>
+    <meta name="mobile-web-app-capable" content="yes"> <!-- TODO: Use new scheme for homescreen adding -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/ripples.min.css" rel="stylesheet">
     <link href="css/material-wfont.min.css" rel="stylesheet">
 
     <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         .menu ul {
             list-style-type: none;
             padding: 0;
@@ -20,19 +25,20 @@
         }
         .pages {
             top:0;
-            right:0;
+            left:0;
             z-index: 1;
         }
         .page {
+            overflow: auto;
             position: absolute;
-            width: 100%;
+            width: 94%;
             padding-bottom: 1em;
-            -webkit-transform: translateY(-150%);
+            -webkit-transform: translateX(300%);
             z-index: 1;
         }
         .page.active {
-            -webkit-transform: translateY(0px);
-            -webkit-transition: transform .75s ease-out;
+            -webkit-transform: translateX(0px);
+            -webkit-transition: transform .6s ease-out;
         }
         .notes {
             font-size: 24px;
@@ -48,11 +54,11 @@
     <!-- Your site -->
     <br />
     <div class="container">
-        <div class="center-block well app-header">
+        <div class="well app-header">
             <h1>Web Planner and Scheduler</h1>
         </div>
         <div class="row">
-            <div class="menu col-xs-4 well">
+            <div class="menu col-sm-4 well">
                 <ul>
                     <li class="active withripple" data-target="#class1">Class 1</li>
                     <li class="withripple" data-target="#class2">Class 2</li>
@@ -63,32 +69,32 @@
                     <li class="withripple" data-target="#class7">Class 7</li>
                 </ul>
             </div>
-                <div class="pages col-xs-8">
+                <div class="pages col-sm-8">
                     <div class="well page active" id="class1">
                         <h1>Class 1</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class2">
+                    <div class="well page" id="class2" style="display: none;">
                         <h1>Class 2</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class3">
+                    <div class="well page" id="class3" style="display: none;">
                         <h1>Class 3</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class4">
+                    <div class="well page" id="class4" style="display: none;">
                         <h1>Class 4</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class5">
+                    <div class="well page" id="class5" style="display: none;">
                         <h1>Class 5</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class6">
+                    <div class="well page" id="class6" style="display: none;">
                         <h1>Class 6</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
-                    <div class="well page" id="class7">
+                    <div class="well page" id="class7" style="display: none;">
                         <h1>Class 7</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="10"></textarea>
                     </div>
@@ -121,9 +127,8 @@
 
             setTimeout(function() {
                 oldPage.removeClass('active');
-                oldPage.show();
                 target.addClass('active');
-            }, 600);
+            }, 400);
 
         });
     </script>
