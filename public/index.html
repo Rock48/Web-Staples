@@ -18,36 +18,63 @@
         }
         .menu li {
             padding: 1em;
-            cursor: default;
+            cursor: hand;
         }
-        .menu li.active {
-            background-color: dodgerblue;
+        .menu li.active  {
+            background-color: #03a9f4;
+            color: white;
         }
         .pages {
             top:0;
             left:0;
-            height: 33em;
+            height: 35.1em;
             z-index: 1;
         }
         .page {
             overflow: auto;
             position: absolute;
             width: 98%;
-            height: 32em;
+            height: 33.7em;
             padding-bottom: 1em;
             -webkit-transform: translateX(300%);
+            -moz-transform: translateX(300%);
+            transform: translateX(300%);
             -webkit-transition: transform .6s ease-in;
+            -moz-transition: transform .6s ease-in;
+            transition: transform .6s ease-in;
             z-index: 1;
         }
         .page.active {
             -webkit-transform: translateX(0);
+            -moz-transform: translateX(0);
+            transform: translateX(0);
             -webkit-transition: transform .6s ease-out;
+            -moz-transition: transform .6s ease-out;
+            transition: transform .6s ease-out;
         }
         .notes {
             font-size: 24px;
         }
         .timer-block {
-            /*margin-top: 0em;*/
+            height: 10.5em;
+        }
+        #timerHeader {
+            margin-top: 0;
+            position: absolute;
+            -webkit-transform: translateX(0);
+            -moz-transform: translateX(0);
+            transform: translateX(0);
+        }
+        #timerHeader.active {
+            -webkit-transform: translateX(400%);
+            -moz-transform: translateX(400%);
+            transform: translateX(400%);
+            -webkit-transition: transform .8s ease-in;
+            -moz-transition: transform .8s ease-in;
+            transition: transform .8s ease-in;
+        }
+        h1 {
+            margin-top: 0;
         }
     </style>
 
@@ -59,7 +86,7 @@
     <div class="container">
         <div class="row">
         <div class="well">
-            <h1>Web Planner and Scheduler</h1>
+            <h1 style="margin-top: 0.3em">Web Planner and Scheduler</h1>
         </div>
         </div>
         <div class="row">
@@ -71,21 +98,14 @@
                     <li class="withripple" data-target="#class4">Class 4</li>
                     <li class="withripple" data-target="#class5">Class 5</li>
                     <li class="withripple" data-target="#class6">Class 6</li>
+                    <li class="withripple" data-target="#class7">Class 7</li>
+                    <li class="withripple" data-target="#class8">Class 8</li>
                 </ul>
             </div>
                 <div class="pages col-sm-8">
                     <div class="well page active" id="class1">
                         <h1>Class 1</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
-                        <a class="btn btn-fab btn-info">
-                            <span class="mdi-action-assignment"></span>
-                        </a>
-                        <a class="btn btn-fab btn-success">
-                            <span class="mdi-action-assignment-turned-in"></span>
-                        </a>
-                        <a class="btn btn-fab btn-danger">
-                            <span class="mdi-action-assignment-late"></span>
-                        </a>
                     </div>
                     <div class="well page" id="class2" style="display: none;">
                         <h1>Class 2</h1>
@@ -107,18 +127,30 @@
                         <h1>Class 6</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
+                    <div class="well page" id="class7" style="display: none;">
+                        <h1>Class 6</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
+                    </div>
+                    <div class="well page" id="class8" style="display: none;">
+                        <h1>Class 6</h1>
+                        <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
+                    </div>
                 </div>
         </div>
-        <div class="row well timer-block">
+        <div class="row well timer-block well-success">
             <h1 id="timerHeader"></h1>
-            <p>
-                <span id="startTime">0:00</span>
-                <span class="text-right" id="endTime">0:00</span>
+            <div style="margin-top: 3em;">
                 <span id="currentTime">0:00</span>
-                <div class="progress progress-striped active">
+                <div class="progress progress-striped active" style="margin-top: .5em;">
                     <div class="progress-bar progress-bar-material-blue" id="classProgress" style="width: 0%"></div>
                 </div>
-            </p>
+            </div>
+            <table style="width:100%;">
+                <tr>
+                    <td id="startTime">0:00</td>
+                    <td class="text-right" id="endTime">0:00</td>
+                </tr>
+            </table>
         </div>
     </div>
 
@@ -133,39 +165,52 @@
     <script src="js/material.min.js"></script>
     <script>
 
+        function t(h,m) {
+            return (h*60+m)*60;
+        }
+
         schedule = [
             {
                 name: 'Programming',
-                timeStart: 27000,
-                timeEnd: 30000
+                timeStart: t(7,30),
+                timeEnd: t(8,20)
             },
             {
                 name: 'Algebra 2A',
-                timeStart: 30300,
-                timeEnd: 35100
+                timeStart: t(8,25),
+                timeEnd: t(9,45)
             },
             {
                 name: "Chemistry A",
-                timeStart: 35400,
-                timeEnd: 38400
+                timeStart: t(9,50),
+                timeEnd: t(10,40)
             },
             {
-                name: "English 2A",
-                timeStart: 38700,
-                timeEnd: 44700
+                name: "English 2A (1)",
+                timeStart: t(10,45),
+                timeEnd: t(11,15)
+            },
+            {
+                name: "Lunch 2",
+                timeStart: t(11,20),
+                timeEnd: t(11,50)
+            },
+            {
+                name: "English 2A (3)",
+                timeStart: t(11,55),
+                timeEnd: t(12,25)
             },
             {
                 name: "Free",
-                timeStart: 43200,
-                timeEnd: 47700
+                timeStart: t(12,30),
+                timeEnd: t(13,15)
             },
             {
                 name: "US History A",
-                timeStart: 48000,
-                timeEnd: 51300
+                timeStart: t(13,20),
+                timeEnd: t(14,15)
             }
         ];
-
         $(document).ready(function() {
             $.material.init();
             var i = 0;
@@ -181,31 +226,75 @@
                 i++;
             });
 
+            var classHeaderTO = setTimeout(function() {
+                        if(currentClass!=null) $("#timerHeader").text(currentClass.name)
+                    },
+                    40);
             var progressLoop = setInterval(function(){
                 var now = new Date(),
                 then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
                 var secsSinceMidnight = (now.getTime() - then.getTime())/1000;
-                var currentClass = null;
+
                 for(var classId = 0; classId < schedule.length; classId++) {
                     if(schedule[classId].timeStart < secsSinceMidnight && secsSinceMidnight < schedule[classId].timeEnd) {
                         currentClass = schedule[classId];
                         break;
                     }
+                    if(schedule[classId].timeEnd < secsSinceMidnight && secsSinceMidnight < schedule[classId+1].timeStart) {
+                        currentClass = {
+                            name: "Passing Time",
+                            timeStart: schedule[classId].timeEnd,
+                            timeEnd: schedule[classId+1].timeStart
+                        };
+                        break;
+                    }
+
                 }
                 if(currentClass != null) {
-                    $("#timerHeader").text(currentClass.name);
-                    var percentComplete = (secsSinceMidnight - schedule[classId].timeStart)/(schedule[classId].timeEnd - schedule[classId].timeStart);
-                    $("#classProgress").css('width', percentComplete*100 + '%');
+                    $(".menu li").each(function() {
+                        if($(this).data('target') != '#class'+(classId+1) ||
+                                $(this).hasClass('active') ||
+                                currentClass.name == "Passing Time") { $(this).removeClass('btn-success'); return; }
 
-                    totalMins = Math.floor(secsSinceMidnight/60);
-                    hour = Math.floor(totalMins/60);
-                    min = totalMins%hour;
-                    min = (min < 10 ? min : "0" + min);
+                        $(this).addClass('btn-success');
+                    });
 
 
-                    $("#currentTime").text( hour + ":" + min);
+                    percentComplete = Math.round((secsSinceMidnight - currentClass.timeStart)/(currentClass.timeEnd - currentClass.timeStart)*10000)/100;
+
+
+                    var timeThroughCurrentClass = secsSinceMidnight-currentClass.timeStart;
+                    var totalMins = Math.floor(timeThroughCurrentClass/60);
+                    var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
+                    var sec = Math.floor(timeThroughCurrentClass%60);
+                    sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
+
+                    $("#currentTime").text( min+ ":" + sec).css("margin-left", percentComplete-1.5 + "%");
+
+                    var hours = Math.floor(currentClass.timeStart/60/60);
+                    totalMins = Math.floor(currentClass.timeStart/60);
+                    min = totalMins == 0 ? "00" : ((totalMins%60 < 10) ? "0" + totalMins%60 : totalMins%60);
+                    $("#startTime").text((hours > 12 ? hours-12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+
+                    hours = Math.floor(currentClass.timeEnd/60/60);
+                    totalMins = Math.floor(currentClass.timeEnd/60);
+                    min = totalMins == 0 ? "00" : ((totalMins%60 < 10) ? "0" + totalMins%60 : totalMins%60);
+                    $("#endTime").text( (hours > 12 ? hours-12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+
+                    if(percentComplete>99.95) {
+                        clearTimeout(classHeaderTO);
+                        classHeaderTO = setTimeout(function() {
+                            $("#timerHeader").addClass("active").fadeOut(800,function() {
+                                $("#timerHeader").text(currentClass.name);
+                                $(this).removeClass("active");
+                                setTimeout(function(){$(this).fadeIn(800);}.bind(this),100);
+                            });
+                        }, 700);
+                    }
                 }
-            }, 1000);
+            }, 20);
+            setInterval(function(){$("#classProgress").css("width", percentComplete + "%")}, 50);
+
         });
 
 
