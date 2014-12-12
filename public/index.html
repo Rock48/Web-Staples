@@ -1,11 +1,12 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8, user-scalable=0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/>
     <meta name="mobile-web-app-capable" content="yes"> <!-- TODO: Use new scheme for homescreen adding -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/ripples.min.css" rel="stylesheet">
     <link href="css/material-wfont.min.css" rel="stylesheet">
+    <title>WebStaples</title>
 
     <style>
         html, body {
@@ -18,23 +19,36 @@
         }
         .menu li {
             padding: 1em;
+            margin: 0.6em;
             cursor: hand;
+            -webkit-transform: scaleX(1);
+            -moz-transform: scaleX(1);
+            transform: scaleX(1);
+            -webkit-transition: all .6s ease;
+            -moz-transition: all .6s ease;
+            transition: all .6s ease;
         }
         .menu li.active  {
-            background-color: #03a9f4;
+            background-color: lime;
             color: white;
+            -webkit-transform: scaleX(1.08);
+            -moz-transform: scaleX(1.08);
+            transform: scaleX(1.08);
+            -webkit-transition: all .6s ease;
+            -moz-transition: all .6s ease;
+            transition: all .6s ease;
         }
         .pages {
             top:0;
             left:0;
-            height: 35.1em;
+            height: 41.1em;
             z-index: 1;
         }
         .page {
             overflow: auto;
             position: absolute;
             width: 98%;
-            height: 33.7em;
+            height: 39.7em;
             padding-bottom: 1em;
             -webkit-transform: translateX(300%);
             -moz-transform: translateX(300%);
@@ -45,9 +59,9 @@
             z-index: 1;
         }
         .page.active {
-            -webkit-transform: translateX(0);
-            -moz-transform: translateX(0);
-            transform: translateX(0);
+            -webkit-transform: translateX(-0.5em);
+            -moz-transform: translateX(-0.5em);
+            transform: translateX(-0.5em);
             -webkit-transition: transform .6s ease-out;
             -moz-transition: transform .6s ease-out;
             transition: transform .6s ease-out;
@@ -76,6 +90,15 @@
         h1 {
             margin-top: 0;
         }
+        .menu li.btn-material-blue {
+            color:white;
+            -webkit-transform: scaleX(1.08);
+            -moz-transform: scaleX(1.08);
+            transform: scaleX(1.08);
+            -webkit-transition: all .6s ease;
+            -moz-transition: all .6s ease;
+            transition: all .6s ease;
+        }
     </style>
 
 </head>
@@ -86,20 +109,20 @@
     <div class="container">
         <div class="row">
         <div class="well">
-            <h1 style="margin-top: 0.3em">Web Planner and Scheduler</h1>
+            <h1 style="margin-top: 0.3em">WebStaples - The Web Port of MyStaples</h1>
         </div>
         </div>
         <div class="row">
             <div class="menu col-sm-4 well">
                 <ul>
-                    <li class="active withripple" data-target="#class1">Class 1</li>
-                    <li class="withripple" data-target="#class2">Class 2</li>
-                    <li class="withripple" data-target="#class3">Class 3</li>
-                    <li class="withripple" data-target="#class4">Class 4</li>
-                    <li class="withripple" data-target="#class5">Class 5</li>
-                    <li class="withripple" data-target="#class6">Class 6</li>
-                    <li class="withripple" data-target="#class7">Class 7</li>
-                    <li class="withripple" data-target="#class8">Class 8</li>
+                    <li class="active withripple shadow-z-4" data-target="#class1">Class 1</li>
+                    <li class="withripple shadow-z-2" data-target="#class2">Class 2</li>
+                    <li class="withripple shadow-z-2" data-target="#class3">Class 3</li>
+                    <li class="withripple shadow-z-2" data-target="#class4">Class 4</li>
+                    <li class="withripple shadow-z-2" data-target="#class5">Class 5</li>
+                    <li class="withripple shadow-z-2" data-target="#class6">Class 6</li>
+                    <li class="withripple shadow-z-2" data-target="#class7">Class 7</li>
+                    <li class="withripple shadow-z-2" data-target="#class8">Class 8</li>
                 </ul>
             </div>
                 <div class="pages col-sm-8">
@@ -137,18 +160,20 @@
                     </div>
                 </div>
         </div>
-        <div class="row well timer-block well-success">
-            <h1 id="timerHeader"></h1>
+        <div class="row well timer-block well-material-blue">
+            <h1 id="timerHeader" style="color:white;"></h1>
             <div style="margin-top: 3em;">
-                <span id="currentTime">0:00</span>
+                <span style="margin-left: -1.5em">
+                    <span id="currentTime" style="color: lightgrey;">0:00</span>
+                </span>
                 <div class="progress progress-striped active" style="margin-top: .5em;">
-                    <div class="progress-bar progress-bar-material-blue" id="classProgress" style="width: 0%"></div>
+                    <div class="progress-bar progress-bar-material-blue" id="classProgress" style="width: 0%;"></div>
                 </div>
             </div>
             <table style="width:100%;">
                 <tr>
-                    <td id="startTime">0:00</td>
-                    <td class="text-right" id="endTime">0:00</td>
+                    <td id="startTime" style="color: lightgrey;" >0:00</td>
+                    <td class="text-right" id="endTime" style="color: lightgrey;" >0:00</td>
                 </tr>
             </table>
         </div>
@@ -171,45 +196,45 @@
 
         schedule = [
             {
-                name: 'Programming',
+                name: 'Spanish 1B',
                 timeStart: t(7,30),
-                timeEnd: t(8,20)
+                timeEnd: t(8,15)
             },
             {
-                name: 'Algebra 2A',
-                timeStart: t(8,25),
-                timeEnd: t(9,45)
+                name: 'Study Skills',
+                timeStart: t(8,20),
+                timeEnd: t(9,5)
             },
             {
-                name: "Chemistry A",
-                timeStart: t(9,50),
-                timeEnd: t(10,40)
-            },
-            {
-                name: "English 2A (1)",
-                timeStart: t(10,45),
-                timeEnd: t(11,15)
-            },
-            {
-                name: "Lunch 2",
-                timeStart: t(11,20),
-                timeEnd: t(11,50)
-            },
-            {
-                name: "English 2A (3)",
-                timeStart: t(11,55),
-                timeEnd: t(12,25)
-            },
-            {
-                name: "Free",
-                timeStart: t(12,30),
-                timeEnd: t(13,15)
+                name: "Algebra 2A",
+                timeStart: t(9,10),
+                timeEnd: t(10,0)
             },
             {
                 name: "US History A",
-                timeStart: t(13,20),
+                timeStart: t(10,5),
+                timeEnd: t(10,49)
+            },
+            {
+                name: "Lunch 1 (lab)",
+                timeStart: t(10,54),
+                timeEnd: t(11,9)
+            },
+            {
+                name: "Chemistry A (2&3)",
+                timeStart: t(11,14),
+                timeEnd: t(12,34)
+            },
+            {
+                name: "Programming",
+                timeStart: t(12,39),
+                timeEnd: t(13,26)
+            },
+            {
+                name: "Free",
+                timeStart: t(13,31),
                 timeEnd: t(14,15)
-            }
+            },
         ];
         $(document).ready(function() {
             $.material.init();
@@ -254,22 +279,24 @@
                     $(".menu li").each(function() {
                         if($(this).data('target') != '#class'+(classId+1) ||
                                 $(this).hasClass('active') ||
-                                currentClass.name == "Passing Time") { $(this).removeClass('btn-success'); return; }
+                                currentClass.name == "Passing Time") { $(this).removeClass('btn-material-blue'); return; }
 
-                        $(this).addClass('btn-success');
+                        $(this).addClass('btn-material-blue');
                     });
 
 
                     percentComplete = Math.round((secsSinceMidnight - currentClass.timeStart)/(currentClass.timeEnd - currentClass.timeStart)*10000)/100;
 
 
-                    var timeThroughCurrentClass = secsSinceMidnight-currentClass.timeStart;
+                    var timeThroughCurrentClass = currentClass.timeEnd - secsSinceMidnight;
                     var totalMins = Math.floor(timeThroughCurrentClass/60);
                     var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
                     var sec = Math.floor(timeThroughCurrentClass%60);
                     sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
 
-                    $("#currentTime").text( min+ ":" + sec).css("margin-left", percentComplete-1.5 + "%");
+                    $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");;
+
+
 
                     var hours = Math.floor(currentClass.timeStart/60/60);
                     totalMins = Math.floor(currentClass.timeStart/60);
@@ -302,8 +329,8 @@
         $(".menu li").click(function() {
 
             if($(this).is('.active')) return;
-            $(".menu li").removeClass("active");
-            $(this).addClass("active");
+            $(".menu li").removeClass("active").removeClass("shadow-z-4").addClass("shadow-z-2");
+            $(this).addClass("active").addClass("shadow-z-4").removeClass("shadow-z-2");
 
             var target = $($(this).data('target'));
 
