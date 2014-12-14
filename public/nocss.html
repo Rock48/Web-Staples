@@ -1,199 +1,90 @@
 <html>
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/>
-    <meta name="mobile-web-app-capable" content="yes"> <!-- TODO: Use new scheme for homescreen adding -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/ripples.min.css" rel="stylesheet">
-    <link href="css/material-wfont.min.css" rel="stylesheet">
-    <title>WebStaples</title>
-
-    <style>
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        .menu ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .menu li {
-            padding: 1em;
-            margin: 0.6em;
-            cursor: hand;
-            -webkit-transform: scaleX(1);
-            -moz-transform: scaleX(1);
-            transform: scaleX(1);
-            -webkit-transition: all .6s ease;
-            -moz-transition: all .6s ease;
-            transition: all .6s ease;
-        }
-        .menu li.active  {
-            background-color: lime;
-            color: white;
-            -webkit-transform: scaleX(1.08);
-            -moz-transform: scaleX(1.08);
-            transform: scaleX(1.08);
-            -webkit-transition: all .6s ease;
-            -moz-transition: all .6s ease;
-            transition: all .6s ease;
-        }
-        .pages {
-            top:0;
-            left:0;
-            height: 41.1em;
-            z-index: 1;
-        }
-        .page {
-            overflow: auto;
-            position: absolute;
-            width: 98%;
-            height: 39.7em;
-            padding-bottom: 1em;
-            -webkit-transform: translateX(300%);
-            -moz-transform: translateX(300%);
-            transform: translateX(300%);
-            -webkit-transition: transform .6s ease-in;
-            -moz-transition: transform .6s ease-in;
-            transition: transform .6s ease-in;
-            z-index: 1;
-        }
-        .page.active {
-            -webkit-transform: translateX(-0.5em);
-            -moz-transform: translateX(-0.5em);
-            transform: translateX(-0.5em);
-            -webkit-transition: transform .6s ease-out;
-            -moz-transition: transform .6s ease-out;
-            transition: transform .6s ease-out;
-        }
-        .notes {
-            font-size: 24px;
-        }
-        .timer-block {
-            height: 10.5em;
-        }
-        #timerHeader {
-            margin-top: 0;
-            position: absolute;
-            -webkit-transform: translateX(0);
-            -moz-transform: translateX(0);
-            transform: translateX(0);
-        }
-        #timerHeader.active {
-            -webkit-transform: translateX(400%);
-            -moz-transform: translateX(400%);
-            transform: translateX(400%);
-            -webkit-transition: transform .8s ease-in;
-            -moz-transition: transform .8s ease-in;
-            transition: transform .8s ease-in;
-        }
-        h1 {
-            margin-top: 0;
-        }
-        .menu li.btn-material-blue {
-            color:white;
-            -webkit-transform: scaleX(1.08);
-            -moz-transform: scaleX(1.08);
-            transform: scaleX(1.08);
-            -webkit-transition: all .6s ease;
-            -moz-transition: all .6s ease;
-            transition: all .6s ease;
-        }
-    </style>
-
-</head>
-
 <body>
     <!-- Your site -->
     <br />
     <div class="container">
         <div class="row">
-        <div class="well">
-            <h1 style="margin-top: 0.3em">WebStaples - The Web Port of MyStaples</h1>
+        <div class="well staples-blue">
+            <h1>WebStaples - The Web Port of MyStaples</h1>
         </div>
         </div>
         <div class="row">
             <div class="menu col-sm-4 well">
                 <ul>
-                    <li class="active withripple shadow-z-4" data-target="#class1">Class 1</li>
-                    <li class="withripple shadow-z-2" data-target="#class2">Class 2</li>
-                    <li class="withripple shadow-z-2" data-target="#class3">Class 3</li>
-                    <li class="withripple shadow-z-2" data-target="#class4">Class 4</li>
-                    <li class="withripple shadow-z-2" data-target="#class5">Class 5</li>
-                    <li class="withripple shadow-z-2" data-target="#class6">Class 6</li>
-                    <li class="withripple shadow-z-2" data-target="#class7">Class 7</li>
-                    <li class="withripple shadow-z-2" data-target="#class8">Class 8</li>
+                    <li class="active withripple shadow-z-3" data-target="#class1"><div class="status-band btn-success"></div><span>Class 1</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class2"><div class="status-band"></div><span>Class 2</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class3"><div class="status-band"></div><span>Class 3</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class4"><div class="status-band"></div><span>Class 4</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class5"><div class="status-band"></div><span>Class 5</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class6"><div class="status-band"></div><span>Class 6</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class7"><div class="status-band"></div><span>Class 7</span></li>
+                    <li class="withripple shadow-z-2" data-target="#class8"><div class="status-band"></div><span>Class 8</span></li>
                 </ul>
+
             </div>
                 <div class="pages col-sm-8">
                     <div class="well page active" id="class1">
                         <h1>Class 1</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class2" style="display: none;">
+                    <div class="well page" id="class2">
                         <h1>Class 2</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class3" style="display: none;">
+                    <div class="well page" id="class3" >
                         <h1>Class 3</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class4" style="display: none;">
+                    <div class="well page" id="class4" >
                         <h1>Class 4</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class5" style="display: none;">
+                    <div class="well page" id="class5" >
                         <h1>Class 5</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class6" style="display: none;">
+                    <div class="well page" id="class6" >
                         <h1>Class 6</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class7" style="display: none;">
+                    <div class="well page" id="class7" >
                         <h1>Class 6</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
-                    <div class="well page" id="class8" style="display: none;">
+                    <div class="well page" id="class8" >
                         <h1>Class 6</h1>
                         <textarea class="form-control floating-label notes" placeholder="Homework" rows="5"></textarea>
                     </div>
                 </div>
         </div>
-        <div class="row well timer-block well-material-blue">
-            <h1 id="timerHeader" style="color:white;"></h1>
-            <div style="margin-top: 3em;">
-                <span style="margin-left: -1.5em">
-                    <span id="currentTime" style="color: lightgrey;">0:00</span>
+        <div class="row well timer-block staples-blue">
+            <h1 id="timerHeader"></h1>
+            <div >
+                <span >
+                    <span id="currentTime" >0:00</span>
                 </span>
-                <div class="progress progress-striped active" style="margin-top: .5em;">
-                    <div class="progress-bar progress-bar-material-blue" id="classProgress" style="width: 0%;"></div>
+                <div class="progress progress-striped active" >
+                    <div class="progress-bar progress-bar-material-blue" id="classProgress" ></div>
                 </div>
             </div>
-            <table style="width:100%;">
+            <table >
                 <tr>
-                    <td id="startTime" style="color: lightgrey;" >0:00</td>
-                    <td class="text-right" id="endTime" style="color: lightgrey;" >0:00</td>
+                    <td id="startTime"  >0:00</td>
+                    <td class="text-right" id="endTime"  >0:00</td>
                 </tr>
             </table>
         </div>
     </div>
-
-
-
     <!-- Your site ends -->
-
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
     <script src="js/ripples.min.js"></script>
     <script src="js/material.min.js"></script>
     <script>
-
         function t(h,m) {
             return (h*60+m)*60;
         }
-
         schedule = [
             {
                 name: 'Spanish 1B',
@@ -222,20 +113,28 @@
             },
             {
                 name: "Chemistry A (2&3)",
-                timeStart: t(11,14),
-                timeEnd: t(12,34)
+                timeStart: t(14,14),
+                timeEnd: t(15,42)
             },
             {
                 name: "Programming",
-                timeStart: t(12,39),
-                timeEnd: t(13,26)
+                timeStart: t(15,47),
+                timeEnd: t(16,54)
             },
             {
                 name: "Free",
-                timeStart: t(13,31),
-                timeEnd: t(14,15)
+                timeStart: t(16,59),
+                timeEnd: t(17,45)
+            },
+            {
+                name: "Contact coder if you see this",
+                timeStart: t(0,0),
+                timeEnd: t(0,0)
             },
         ];
+        var percentComplete = 0;
+        var currentClass = null;
+
         $(document).ready(function() {
             $.material.init();
             var i = 0;
@@ -245,12 +144,11 @@
                 i++;
             });
             i = 0;
-            $('.menu li').each(function(){
+            $('.menu li span').each(function(){
                 var cls = schedule[i];
                 $(this).text(cls.name);
                 i++;
             });
-
             var classHeaderTO = setTimeout(function() {
                         if(currentClass!=null) $("#timerHeader").text(currentClass.name)
                     },
@@ -260,10 +158,12 @@
                 then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
                 var secsSinceMidnight = (now.getTime() - then.getTime())/1000;
 
-                for(var classId = 0; classId < schedule.length; classId++) {
+                for(var classId = 0; classId < schedule.length-1; classId++) {
                     if(schedule[classId].timeStart < secsSinceMidnight && secsSinceMidnight < schedule[classId].timeEnd) {
                         currentClass = schedule[classId];
                         break;
+                    } else {
+                        $('.menu li[data-target="#class'+(classId+1)+'"]').addClass('btn-material-grey');
                     }
                     if(schedule[classId].timeEnd < secsSinceMidnight && secsSinceMidnight < schedule[classId+1].timeStart) {
                         currentClass = {
@@ -273,20 +173,15 @@
                         };
                         break;
                     }
-
                 }
                 if(currentClass != null) {
                     $(".menu li").each(function() {
                         if($(this).data('target') != '#class'+(classId+1) ||
-                                $(this).hasClass('active') ||
-                                currentClass.name == "Passing Time") { $(this).removeClass('btn-material-blue'); return; }
+                                currentClass.name == "Passing Time") { $(this).removeClass('staples-blue'); return; }
 
-                        $(this).addClass('btn-material-blue');
+                        $(this).addClass('staples-blue');
                     });
-
-
                     percentComplete = Math.round((secsSinceMidnight - currentClass.timeStart)/(currentClass.timeEnd - currentClass.timeStart)*10000)/100;
-
 
                     var timeThroughCurrentClass = currentClass.timeEnd - secsSinceMidnight;
                     var totalMins = Math.floor(timeThroughCurrentClass/60);
@@ -294,9 +189,7 @@
                     var sec = Math.floor(timeThroughCurrentClass%60);
                     sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
 
-                    $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");;
-
-
+                    $("#currentTime").text("-" + min + ":" + sec)/*.css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");*/
 
                     var hours = Math.floor(currentClass.timeStart/60/60);
                     totalMins = Math.floor(currentClass.timeStart/60);
@@ -311,40 +204,33 @@
                     if(percentComplete>99.95) {
                         clearTimeout(classHeaderTO);
                         classHeaderTO = setTimeout(function() {
-                            $("#timerHeader").addClass("active").fadeOut(800,function() {
+                            $("#timerHeader").addClass("active").after(800,/*fadeOut(800,*/ function() {
                                 $("#timerHeader").text(currentClass.name);
                                 $(this).removeClass("active");
-                                setTimeout(function(){$(this).fadeIn(800);}.bind(this),100);
+//                                setTimeout(function(){$(this).fadeIn(800);}.bind(this),100);
                             });
                         }, 700);
                     }
                 }
             }, 20);
-            setInterval(function(){$("#classProgress").css("width", percentComplete + "%")}, 50);
-
+            /*setInterval(function(){$("#classProgress").css("width", percentComplete + "%")}, 200);*/
         });
-
-
-
         $(".menu li").click(function() {
-
             if($(this).is('.active')) return;
-            $(".menu li").removeClass("active").removeClass("shadow-z-4").addClass("shadow-z-2");
-            $(this).addClass("active").addClass("shadow-z-4").removeClass("shadow-z-2");
+            $(".menu li").removeClass("active").removeClass("shadow-z-3").addClass("shadow-z-2").find('.status-band').removeClass('btn-success');
+            $(this).addClass("active").addClass("shadow-z-3").removeClass("shadow-z-2").find('.status-band').addClass('btn-success');
 
             var target = $($(this).data('target'));
 
             var oldPage = $('.page.active');
             oldPage.removeClass('active');
-            oldPage.fadeOut(400);
 
             setTimeout(function() {
-                target.fadeIn();
+                /*oldPage.fadeOut();
+                target.fadeIn();*/
                 target.addClass('active');
             }, 400);
-
         });
     </script>
 </body>
-
 </html>

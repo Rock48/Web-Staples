@@ -1,0 +1,422 @@
+<html>
+<head>
+  <meta name = "viewport" content = "width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/>
+  <meta name = "mobile-web-app-capable" content = "yes">
+  <!-- TODO: Use new scheme for homescreen adding -->
+  <link href = "css/bootstrap.css" rel = "stylesheet">
+  <link href = "css/ripples.min.css" rel = "stylesheet">
+  <link href = "css/material-wfont.min.css" rel = "stylesheet">
+  <title>WebStaples</title>
+  <style>
+      html, body {
+          max-width: 100%;
+          overflow-x: hidden;
+          /*background-color: red;*/
+      }
+
+      .menu ul {
+          list-style-type: none;
+          padding: 0;
+      }
+
+      .menu li {
+          background-color: white;
+          padding: 1em;
+          margin: 0.6em;
+          cursor: hand;
+          position: relative;
+          -webkit-transform: translateX(0);
+          -moz-transform: translateX(0);
+          transform: translateX(0);
+          -webkit-transition: all .6s cubic-bezier(.55, 0, .1, 1);
+          -moz-transition: all .6s cubic-bezier(.55, 0, .1, 1);
+          transition: all .6s cubic-bezier(.55, 0, .1, 1);
+      }
+
+      .menu li.active {
+          position: relative;
+
+          -webkit-transform: translateX(42px);
+          -moz-transform: translateX(42px);
+          transform: translateX(42px);
+
+          -webkit-transition: all .6s cubic-bezier(.55, 0, .1, 1) 1s;
+          -moz-transition: all .6s cubic-bezier(.55, 0, .1, 1) 1s;
+          transition: all .6s cubic-bezier(.55, 0, .1, 1) 1.1s;
+      }
+
+      .status-band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 10px;
+          height: 100%;
+      }
+
+      @media (min-width: 768px) {
+          .pages {
+              padding: 0 0 0 1em;
+          }
+      }
+
+      @media (max-width: 767px) {
+          .pages {
+              padding: 0 0 0 0;
+          }
+      }
+
+      .page {
+          margin: 0;
+          z-index: 1;
+          overflow: auto;
+          position: relative;
+          height: 39.7em;
+          padding-bottom: 1em;
+          -webkit-transform: translateX(300%);
+          -moz-transform: translateX(300%);
+          transform: translateX(300%);
+          -webkit-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          -moz-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+      }
+
+      .page.active {
+          -webkit-transform: translateX(0);
+          -moz-transform: translateX(0);
+          transform: translateX(0);
+          -webkit-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          -moz-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+      }
+
+      .notes {
+          font-size: 24px;
+      }
+
+      .timer-block {
+          height: 10.5em;
+      }
+
+      #timerHeader {
+          margin-top: 0;
+          position: absolute;
+          -webkit-transform: translateX(0);
+          -moz-transform: translateX(0);
+          transform: translateX(0);
+      }
+
+      #timerHeader.active {
+          -webkit-transform: translateX(400%);
+          -moz-transform: translateX(400%);
+          transform: translateX(400%);
+          -webkit-transition: transform .8s ease-in;
+          -moz-transition: transform .8s ease-in;
+          transition: transform .8s ease-in;
+      }
+
+      h1 {
+          margin-top: 0;
+      }
+
+      .staples-blue {
+          color: white;
+          background-color: #202080 !important;
+      }
+
+      .staples-blue h1 {
+          color: white !important;
+      }
+  </style>
+</head>
+<body>
+<!-- Your site -->
+<br/>
+
+<div class = "container">
+  <div class = "row">
+    <div class = "well staples-blue">
+      <table style = "width:100%; margin-top: 0.7em;">
+        <tr>
+          <td><h1>WebStaples - The Web Port of MyStaples</h1></td>
+          <td><h1 class = "text-right" id = "clockTime"></h1></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class = "row">
+    <div class = "menu col-sm-4 well">
+      <ul>
+        <li class = "active withripple shadow-z-3" data-target = "#class1">
+          <div class = "status-band btn-success"></div>
+          <span>Class 1</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class2">
+          <div class = "status-band"></div>
+          <span>Class 2</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class3">
+          <div class = "status-band"></div>
+          <span>Class 3</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class4">
+          <div class = "status-band"></div>
+          <span>Class 4</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class5">
+          <div class = "status-band"></div>
+          <span>Class 5</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class6">
+          <div class = "status-band"></div>
+          <span>Class 6</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class7">
+          <div class = "status-band"></div>
+          <span>Class 7</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class8">
+          <div class = "status-band"></div>
+          <span>Class 8</span></li>
+        <li class = "withripple shadow-z-2" data-target = "#class9">
+          <div class = "status-band"></div>
+          <span>Class 9</span></li>
+      </ul>
+    </div>
+    <div class = "pages col-sm-8">
+      <div class = "well page active" id = "class1">
+        <h1>Class 1</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class2" style = "display: none;">
+        <h1>Class 2</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class3" style = "display: none;">
+        <h1>Class 3</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class4" style = "display: none;">
+        <h1>Class 4</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class5" style = "display: none;">
+        <h1>Class 5</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class6" style = "display: none;">
+        <h1>Class 6</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class7" style = "display: none;">
+        <h1>Class 7</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class8" style = "display: none;">
+        <h1>Class 8</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+      <div class = "well page" id = "class9" style = "display: none;">
+        <h1>Class 9</h1>
+        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class = "row well timer-block staples-blue">
+    <h1 id = "timerHeader">Welcome, Guest!</h1>
+
+    <div style = "margin-top: 3em;">
+                <span style = "margin-left: -1.5em">
+                    <span id = "currentTime" style = "color: lightgrey;">0:00</span>
+                </span>
+
+      <div class = "progress progress-striped active" style = "margin-top: .5em;">
+        <div class = "progress-bar progress-bar-material-blue" id = "classProgress" style = "width: 0;"></div>
+      </div>
+    </div>
+    <table style = "width:100%;">
+      <tr>
+        <td id = "startTime" style = "color: lightgrey;">0:00</td>
+        <td class = "text-right" id = "endTime" style = "color: lightgrey;">0:00</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<!-- Your site ends -->
+<script src = "//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<script src = "js/ripples.min.js"></script>
+<script src = "js/material.min.js"></script>
+<script>
+
+/*    var serverTimeJSON =
+
+    var localSecsStart = +(new Date());
+
+    console.log(localSecsStart);
+    console.log(serverTimeJSON);*/
+
+    function t(h, m) {
+        return (h * 60 + m) * 60;
+    }
+    schedule = [
+        {
+            name: 'Spanish 1B',
+            timeStart: t(7, 30),
+            timeEnd: t(8, 15)
+        },
+        {
+            name: 'Study Skills',
+            timeStart: t(8, 20),
+            timeEnd: t(9, 5)
+        },
+        {
+            name: "Algebra 2A",
+            timeStart: t(9, 10),
+            timeEnd: t(10, 0)
+        },
+        {
+            name: "US History A",
+            timeStart: t(10, 5),
+            timeEnd: t(10, 49)
+        },
+        {
+            name: "English (1)",
+            timeStart: t(10, 54),
+            timeEnd: t(11, 24)
+        },
+        {
+            name: "Lunch 2",
+            timeStart: t(11, 29),
+            timeEnd: t(11, 59)
+        },
+        {
+            name: "English (3)",
+            timeStart: t(12, 4),
+            timeEnd: t(12, 34)
+        },
+        {
+            name: "Programming",
+            timeStart: t(12, 39),
+            timeEnd: t(13, 24)
+        },
+        {
+            name: "Free",
+            timeStart: t(13, 29),
+            timeEnd: t(14, 15)
+        },
+        {
+            name: "Contact coder if you see this",
+            timeStart: t(0, 0),
+            timeEnd: t(0, 0)
+        }
+    ];
+
+    var timeOffset = -t(6, 52);
+
+    var percentComplete = 0;
+    var currentClass = null;
+
+    $(document).ready(function () {
+        $.material.init();
+        var i = 0;
+        $('.page').each(function () {
+            var cls = schedule[i];
+            $(this).find('h1').first().text(cls.name);
+            i++;
+        });
+        i = 0;
+        $('.menu li span').each(function () {
+            var cls = schedule[i];
+            $(this).text(cls.name);
+            i++;
+        });
+        /* Updates Class Header */ setInterval(function () {
+            console.log("tick");
+            var timerHeader = $("#timerHeader");
+            if (currentClass != null ? currentClass.name != timerHeader.text() : timerHeader.text() != "No School") {
+                timerHeader.addClass("active").fadeOut(800, function () {
+                    $(this).removeClass("active");
+                    if (currentClass != null)
+                        timerHeader.text(currentClass.name);
+                    else
+                        timerHeader.text("No School");
+                    setTimeout(function () {
+                        $(this).fadeIn(800);
+                    }.bind(this), 100);
+                });
+            }
+        }, 4000);
+        /* Updates time and current class */ setInterval(function () {
+            var now = new Date(),
+                    then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
+
+            for (var classId = 0; classId < schedule.length - 1; classId++) {
+                if (schedule[classId].timeStart < secsSinceMidnight && secsSinceMidnight < schedule[classId].timeEnd) {
+                    currentClass = schedule[classId];
+                    break;
+                } else {
+                    $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
+                }
+                if (schedule[classId].timeEnd < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].timeStart) {
+                    currentClass = {
+                        name: "Passing Time",
+                        timeStart: schedule[classId].timeEnd,
+                        timeEnd: schedule[classId + 1].timeStart
+                    };
+                    break;
+                }
+            }
+
+            hours = Math.floor(secsSinceMidnight / 60 / 60);
+            totalMins = Math.floor(secsSinceMidnight / 60);
+            min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+            $("#clockTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+            if (currentClass != null) {
+                $(".menu li").each(function () {
+                    if ($(this).data('target') != '#class' + (classId + 1) ||
+                            currentClass.name == "Passing Time") {
+                        $(this).removeClass('staples-blue');
+                        return;
+                    }
+
+                    $(this).addClass('staples-blue');
+                });
+                percentComplete = Math.round((secsSinceMidnight - currentClass.timeStart) / (currentClass.timeEnd - currentClass.timeStart) * 10000) / 100;
+
+                var timeThroughCurrentClass = currentClass.timeEnd - secsSinceMidnight;
+                var totalMins = Math.floor(timeThroughCurrentClass / 60);
+                var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
+                var sec = Math.floor(timeThroughCurrentClass % 60);
+                sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
+
+                $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");
+
+                var hours = Math.floor(currentClass.timeStart / 60 / 60);
+                totalMins = Math.floor(currentClass.timeStart / 60);
+                min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+                $("#startTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+
+                hours = Math.floor(currentClass.timeEnd / 60 / 60);
+                totalMins = Math.floor(currentClass.timeEnd / 60);
+                min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+                $("#endTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+            }
+        }, 20);
+        /* Sets the progress of the timer bar */ setInterval(function () {
+            $("#classProgress").css("width", percentComplete + "%")
+        }, 200);
+    });
+    $(".menu li").click(function () {
+        if ($(this).is('.active')) return;
+        $(".menu li").removeClass("active").removeClass("shadow-z-3").addClass("shadow-z-2").find('.status-band').removeClass('btn-success');
+        $(this).addClass("active").addClass("shadow-z-3").removeClass("shadow-z-2").find('.status-band').addClass('btn-success');
+
+        var target = $($(this).data('target'));
+
+        var oldPage = $('.page.active');
+        oldPage.removeClass('active');
+
+        setTimeout(function () {
+            oldPage.fadeOut(0);
+            target.fadeIn(0);
+            target.addClass('active');
+        }, 400);
+    });
+</script>
+</body>
+</html>
