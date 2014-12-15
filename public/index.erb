@@ -21,7 +21,7 @@
 
       .menu li {
           background-color: white;
-          padding: 1em;
+          padding: 0.65em 0 0.65em 1em;
           margin: 0.6em;
           cursor: hand;
           position: relative;
@@ -34,8 +34,6 @@
       }
 
       .menu li.active {
-          position: relative;
-
           -webkit-transform: translateX(42px);
           -moz-transform: translateX(42px);
           transform: translateX(42px);
@@ -70,7 +68,7 @@
           z-index: 1;
           overflow: auto;
           position: relative;
-          height: 39.7em;
+          height: 43.6em;
           padding-bottom: 1em;
           -webkit-transform: translateX(300%);
           -moz-transform: translateX(300%);
@@ -123,7 +121,7 @@
           background-color: #202080 !important;
       }
 
-      .staples-blue h1 {
+      .staples-blue h1, .staples-blue h2 {
           color: white !important;
       }
   </style>
@@ -133,21 +131,21 @@
 <br/>
 
 <div class = "container">
-  <div class = "row">
-    <div class = "well staples-blue">
-      <table style = "width:100%; margin-top: 0.7em;">
-        <tr>
-          <td><h1>WebStaples - The Web Port of MyStaples</h1></td>
-          <td><h1 class = "text-right" id = "clockTime"></h1></td>
-        </tr>
-      </table>
-    </div>
+  <div class = "row well staples-blue" style="padding-top: 1.7em; height:8em">
+      <h1 class = "" style="position: absolute;">WebStaples<span class="hidden-xs">: Web Port of MyStaples</span></h1><h1 class="text-right" id="clockTime"></h1>
+      <hr />
   </div>
   <div class = "row">
     <div class = "menu col-sm-4 well">
       <ul>
-        <li class = "active withripple shadow-z-3" data-target = "#class1">
+        <li class = "active withripple shadow-z-3" data-target = "#announcements">
           <div class = "status-band btn-success"></div>
+          Announcements</li>
+        <!--suppress HtmlUnknownTag -->
+        <hr   />
+        <h2 class="panel-heading" style="margin-top: 0">Schedule</h2>
+        <li class = "withripple shadow-z-2" data-target = "#class1">
+          <div class = "status-band"></div>
           <span>Class 1</span></li>
         <li class = "withripple shadow-z-2" data-target = "#class2">
           <div class = "status-band"></div>
@@ -176,7 +174,10 @@
       </ul>
     </div>
     <div class = "pages col-sm-8">
-      <div class = "well page active" id = "class1">
+      <div class = "well page active" id = "announcements">
+        <h1>Today's Announcements</h1>
+      </div>
+      <div class = "well page" id = "class1" style = "display: none;">
         <h1>Class 1</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
@@ -313,7 +314,7 @@
     $(document).ready(function () {
         $.material.init();
         var i = 0;
-        $('.page').each(function () {
+        $('.page').not("#announcements").each(function () {
             var cls = schedule[i];
             $(this).find('h1').first().text(cls.name);
             i++;
@@ -325,7 +326,6 @@
             i++;
         });
         /* Updates Class Header */ setInterval(function () {
-            console.log("tick");
             var timerHeader = $("#timerHeader");
             if (currentClass != null ? currentClass.name != timerHeader.text() : timerHeader.text() != "No School") {
                 timerHeader.addClass("active").fadeOut(800, function () {
