@@ -124,6 +124,10 @@
       .staples-blue h1, .staples-blue h2 {
           color: white !important;
       }
+
+      var {
+          display: none;
+      }
   </style>
 </head>
 <body>
@@ -141,9 +145,10 @@
         <li class = "active withripple shadow-z-3" data-target = "#announcements">
           <div class = "status-band btn-success"></div>
           Announcements</li>
-        <!--suppress HtmlUnknownTag -->
+      </ul>
         <hr   />
         <h2 class="panel-heading" style="margin-top: 0">Schedule</h2>
+      <ul>
         <li class = "withripple shadow-z-2" data-target = "#class1">
           <div class = "status-band"></div>
           <span>Class 1</span></li>
@@ -168,49 +173,48 @@
         <li class = "withripple shadow-z-2" data-target = "#class8">
           <div class = "status-band"></div>
           <span>Class 8</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class9">
-          <div class = "status-band"></div>
-          <span>Class 9</span></li>
       </ul>
     </div>
     <div class = "pages col-sm-8">
       <div class = "well page active" id = "announcements">
-        <h1>Today's Announcements</h1>
+        <h1 class="modal-header">Today's Announcements</h1>
+        <span id="announcementZone">
+            <div class="row">
+              <div class="col-lg-6">
+              </div>
+            </div>
+        </span>
       </div>
       <div class = "well page" id = "class1" style = "display: none;">
-        <h1>Class 1</h1>
+        <h1 class="modal-header">Class 1</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class2" style = "display: none;">
-        <h1>Class 2</h1>
+        <h1 class="modal-header">Class 2</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class3" style = "display: none;">
-        <h1>Class 3</h1>
+        <h1 class="modal-header">Class 3</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class4" style = "display: none;">
-        <h1>Class 4</h1>
+        <h1 class="modal-header">Class 4</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class5" style = "display: none;">
-        <h1>Class 5</h1>
+        <h1 class="modal-header">Class 5</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class6" style = "display: none;">
-        <h1>Class 6</h1>
+        <h1 class="modal-header">Class 6</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class7" style = "display: none;">
-        <h1>Class 7</h1>
+        <h1 class="modal-header">Class 7</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
       <div class = "well page" id = "class8" style = "display: none;">
-        <h1>Class 8</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class9" style = "display: none;">
-        <h1>Class 9</h1>
+        <h1 class="modal-header">Class 8</h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
     </div>
@@ -241,61 +245,63 @@
 
 <script src = "js/ripples.min.js"></script>
 <script src = "js/material.min.js"></script>
+
+<!-- Begin variable transfer from Ruby -->
+<var id="serverTime"><%=@time%></var>
+<var id="announcementsVar"><%=@announcements%></var>
+<!-- End variables -->
+
 <script>
+    var serverTimeObj = JSON.parse($("#serverTime").text());
+    var serverSecs = (+serverTimeObj.hours * 60 + serverTimeObj.mins) * 60 + serverTimeObj.secs;
+    var now = new Date();
+    var then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    var localSecs = ((now.getTime() - then.getTime()) / 1000);
+    var timeOffset = serverSecs-localSecs;
 
-/*    var serverTimeJSON =
-
-    var localSecsStart = +(new Date());
-
-    console.log(localSecsStart);
-    console.log(serverTimeJSON);*/
+    console.log(timeOffset);
 
     function t(h, m) {
         return (h * 60 + m) * 60;
     }
     schedule = [
         {
-            name: 'Spanish 1B',
+            name: 'English 2A',
             timeStart: t(7, 30),
-            timeEnd: t(8, 15)
+            timeEnd: t(8, 13)
         },
         {
             name: 'Study Skills',
-            timeStart: t(8, 20),
+            timeStart: t(8, 18),
             timeEnd: t(9, 5)
         },
         {
-            name: "Algebra 2A",
+            name: "Spanish 1B",
             timeStart: t(9, 10),
-            timeEnd: t(10, 0)
+            timeEnd: t(9, 57)
         },
         {
-            name: "US History A",
+            name: "Chemistry A",
             timeStart: t(10, 5),
             timeEnd: t(10, 49)
         },
         {
-            name: "English (1)",
-            timeStart: t(10, 54),
-            timeEnd: t(11, 24)
-        },
-        {
-            name: "Lunch 2",
-            timeStart: t(11, 29),
-            timeEnd: t(11, 59)
-        },
-        {
-            name: "English (3)",
-            timeStart: t(12, 4),
-            timeEnd: t(12, 34)
+            name: "Lunch 1 (Lab)",
+            timeStart: t(10, 53),
+            timeEnd: t(11, 13)
         },
         {
             name: "Programming",
-            timeStart: t(12, 39),
+            timeStart: t(11, 18),
+            timeEnd: t(12, 33)
+        },
+        {
+            name: "US History A",
+            timeStart: t(12, 38),
             timeEnd: t(13, 24)
         },
         {
-            name: "Free",
+            name: "Alegebra 2A",
             timeStart: t(13, 29),
             timeEnd: t(14, 15)
         },
@@ -306,13 +312,40 @@
         }
     ];
 
-    var timeOffset = -t(6, 52);
 
     var percentComplete = 0;
     var currentClass = null;
 
+    var announcements = JSON.parse($("#announcementsVar").text());
+
     $(document).ready(function () {
         $.material.init();
+
+        var ancTxt = "\n";
+
+        for(var curAnc = 0; curAnc < announcements.length; curAnc += 2) {
+            ancTxt+='<div class="row">\n';
+            if(announcements[curAnc] != null) {
+                ancTxt += '<div class="col-md-6">\n' +
+                            '<h3>'+announcements[curAnc].title+'</h3>\n' +
+                            '<p>'+announcements[curAnc].body+'</p>\n' +
+                          '</div>\n';
+                ancTxt += '<div class="col-md-6">\n' +
+                            '<h3>'+announcements[curAnc+1].title+'</h3>\n' +
+                            '<p>'+announcements[curAnc+1].body+'</p>\n' +
+                          '</div>\n';
+            } else {
+                ancTxt += '<div class="col-md-12">\n' +
+                            '<h3>'+announcements[curAnc].title+'</h3>\n' +
+                            '<p>'+announcements[curAnc].body+'</p>\n' +
+                          '</div>\n';
+            }
+            ancTxt+='</div>\n';
+        }
+
+
+        $('#announcementZone').html(ancTxt);
+
         var i = 0;
         $('.page').not("#announcements").each(function () {
             var cls = schedule[i];
@@ -341,8 +374,8 @@
             }
         }, 4000);
         /* Updates time and current class */ setInterval(function () {
-            var now = new Date(),
-                    then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            now = new Date();
+            then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
             var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
 
             for (var classId = 0; classId < schedule.length - 1; classId++) {
