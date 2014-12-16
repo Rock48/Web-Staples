@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'open-uri'
-#OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 set :bind, '0.0.0.0'
 set :views, Proc.new { File.join(root, 'public') }

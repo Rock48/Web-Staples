@@ -325,7 +325,7 @@
 
         for(var curAnc = 0; curAnc < announcements.length; curAnc += 2) {
             ancTxt+='<div class="row">\n';
-            if(announcements[curAnc] != null) {
+            if(curAnc != announcements.length-1) {
                 ancTxt += '<div class="col-md-6">\n' +
                             '<h3>'+announcements[curAnc].title+'</h3>\n' +
                             '<p>'+announcements[curAnc].body+'</p>\n' +
