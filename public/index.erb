@@ -117,8 +117,18 @@
       }
 
       .staples-blue {
+           color: white;
+           background-color: #202080 !important;
+       }
+
+      .staples-blue:hover {
           color: white;
-          background-color: #202080 !important;
+      }
+
+      #btn-settings {
+          position: absolute;
+          left:-30px;
+          top:75px;
       }
 
       .staples-blue h1, .staples-blue h2 {
@@ -141,6 +151,9 @@
   </div>
   <div class = "row">
     <div class = "menu col-sm-4 well">
+      <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#settings-dialog" id="btn-settings">
+        <span class="mdi-action-settings"></span>
+      </a>
       <ul>
         <li class = "active withripple shadow-z-3" data-target = "#announcements">
           <div class = "status-band btn-success"></div>
@@ -149,30 +162,11 @@
         <hr   />
         <h2 class="panel-heading" style="margin-top: 0">Schedule</h2>
       <ul>
-        <li class = "withripple shadow-z-2" data-target = "#class1">
+        <% @schedule_len.times do |i| %>
+        <li class = "withripple shadow-z-2" data-target = "#class<%=i+1%>">
           <div class = "status-band"></div>
-          <span>Class 1</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class2">
-          <div class = "status-band"></div>
-          <span>Class 2</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class3">
-          <div class = "status-band"></div>
-          <span>Class 3</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class4">
-          <div class = "status-band"></div>
-          <span>Class 4</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class5">
-          <div class = "status-band"></div>
-          <span>Class 5</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class6">
-          <div class = "status-band"></div>
-          <span>Class 6</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class7">
-          <div class = "status-band"></div>
-          <span>Class 7</span></li>
-        <li class = "withripple shadow-z-2" data-target = "#class8">
-          <div class = "status-band"></div>
-          <span>Class 8</span></li>
+          <span>Class <%=i+1%></span></li>
+        <% end %>
       </ul>
     </div>
     <div class = "pages col-sm-8">
@@ -185,38 +179,12 @@
             </div>
         </span>
       </div>
-      <div class = "well page" id = "class1" style = "display: none;">
-        <h1 class="modal-header">Class 1</h1>
+      <% @schedule_len.times do |i| %>
+      <div class = "well page" id = "class<%=i+1%>" style = "display: none;">
+        <h1 class="modal-header">Class <%=i+1%></h1>
         <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
       </div>
-      <div class = "well page" id = "class2" style = "display: none;">
-        <h1 class="modal-header">Class 2</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class3" style = "display: none;">
-        <h1 class="modal-header">Class 3</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class4" style = "display: none;">
-        <h1 class="modal-header">Class 4</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class5" style = "display: none;">
-        <h1 class="modal-header">Class 5</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class6" style = "display: none;">
-        <h1 class="modal-header">Class 6</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class7" style = "display: none;">
-        <h1 class="modal-header">Class 7</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
-      <div class = "well page" id = "class8" style = "display: none;">
-        <h1 class="modal-header">Class 8</h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
+      <% end %>
     </div>
   </div>
   <div class = "row well timer-block staples-blue">
@@ -239,6 +207,33 @@
     </table>
   </div>
 </div>
+
+<div id="settings-dialog" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <form method="post" action="/">
+          <div class="modal-body">
+            <input type="text" class="form-control floating-label" placeholder="Period 1 Class" name="per1"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 2 Class" name="per2"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 3 Class" name="per3"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 4 Class" name="per4"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 5 Class" name="per5"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 6 Class" name="per6"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 7 Class" name="per7"><br />
+            <input type="text" class="form-control floating-label" placeholder="Period 8 Class" name="per8"><br />
+          </div>
+          <div class="modal-footer">
+            <input value="Cancel" name="cancel" type="reset" class="btn btn-primary" data-dismiss="modal"><input value="Apply" name="submit" type="submit" class="btn btn-primary">
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Your site ends -->
 <script src = "//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -249,6 +244,8 @@
 <!-- Begin variable transfer from Ruby -->
 <var id="serverTime"><%=@time%></var>
 <var id="announcementsVar"><%=@announcements%></var>
+<var id="scheduleData"><%=@schedule%></var>
+<var id="userData"></var>
 <!-- End variables -->
 
 <script>
@@ -259,59 +256,20 @@
     var localSecs = ((now.getTime() - then.getTime()) / 1000);
     var timeOffset = serverSecs-localSecs;
 
+    timeOffset-=45; // Server time is 48 seconds fast compared to clocks in building
+
     console.log(timeOffset);
 
     function t(h, m) {
         return (h * 60 + m) * 60;
     }
-    schedule = [
-        {
-            name: 'English 2A',
-            timeStart: t(7, 30),
-            timeEnd: t(8, 13)
-        },
-        {
-            name: 'Study Skills',
-            timeStart: t(8, 18),
-            timeEnd: t(9, 5)
-        },
-        {
-            name: "Spanish 1B",
-            timeStart: t(9, 10),
-            timeEnd: t(9, 57)
-        },
-        {
-            name: "Chemistry A",
-            timeStart: t(10, 5),
-            timeEnd: t(10, 49)
-        },
-        {
-            name: "Lunch 1 (Lab)",
-            timeStart: t(10, 53),
-            timeEnd: t(11, 13)
-        },
-        {
-            name: "Programming",
-            timeStart: t(11, 18),
-            timeEnd: t(12, 33)
-        },
-        {
-            name: "US History A",
-            timeStart: t(12, 38),
-            timeEnd: t(13, 24)
-        },
-        {
-            name: "Alegebra 2A",
-            timeStart: t(13, 29),
-            timeEnd: t(14, 15)
-        },
-        {
-            name: "Contact coder if you see this",
-            timeStart: t(0, 0),
-            timeEnd: t(0, 0)
-        }
-    ];
+    schedule = JSON.parse($('#scheduleData').text());
 
+    schedule.push({
+            name: 'Contact coder if you see this',
+            start_seconds: -5,
+            end_seconds: -5
+    });
 
     var percentComplete = 0;
     var currentClass = null;
@@ -379,19 +337,20 @@
             var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
 
             for (var classId = 0; classId < schedule.length - 1; classId++) {
-                if (schedule[classId].timeStart < secsSinceMidnight && secsSinceMidnight < schedule[classId].timeEnd) {
+                if (schedule[classId].start_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId].end_seconds) {
                     currentClass = schedule[classId];
+                    conole.log(classId);
+                    break;
+                } else if (schedule[classId].end_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].start_seconds) {
+                    currentClass = {
+                        name: "Passing Time",
+                        start_seconds: schedule[classId].end_seconds,
+                        end_seconds: schedule[classId + 1].start_seconds
+                    };
+                    $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
                     break;
                 } else {
                     $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
-                }
-                if (schedule[classId].timeEnd < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].timeStart) {
-                    currentClass = {
-                        name: "Passing Time",
-                        timeStart: schedule[classId].timeEnd,
-                        timeEnd: schedule[classId + 1].timeStart
-                    };
-                    break;
                 }
             }
 
@@ -409,9 +368,9 @@
 
                     $(this).addClass('staples-blue');
                 });
-                percentComplete = Math.round((secsSinceMidnight - currentClass.timeStart) / (currentClass.timeEnd - currentClass.timeStart) * 10000) / 100;
+                percentComplete = Math.round((secsSinceMidnight - currentClass.start_seconds) / (currentClass.end_seconds - currentClass.start_seconds) * 10000) / 100;
 
-                var timeThroughCurrentClass = currentClass.timeEnd - secsSinceMidnight;
+                var timeThroughCurrentClass = currentClass.end_seconds - secsSinceMidnight;
                 var totalMins = Math.floor(timeThroughCurrentClass / 60);
                 var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
                 var sec = Math.floor(timeThroughCurrentClass % 60);
@@ -419,13 +378,13 @@
 
                 $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");
 
-                var hours = Math.floor(currentClass.timeStart / 60 / 60);
-                totalMins = Math.floor(currentClass.timeStart / 60);
+                var hours = Math.floor(currentClass.start_seconds / 60 / 60);
+                totalMins = Math.floor(currentClass.start_seconds / 60);
                 min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
                 $("#startTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
 
-                hours = Math.floor(currentClass.timeEnd / 60 / 60);
-                totalMins = Math.floor(currentClass.timeEnd / 60);
+                hours = Math.floor(currentClass.end_seconds / 60 / 60);
+                totalMins = Math.floor(currentClass.end_seconds / 60);
                 min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
                 $("#endTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
             }
