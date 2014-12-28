@@ -2,6 +2,7 @@
 <head>
   <meta name = "viewport" content = "width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/>
   <meta name = "mobile-web-app-capable" content = "yes">
+  <meta name = "theme-color" content="#202080">
   <!-- TODO: Use new scheme for homescreen adding -->
   <link href = "css/bootstrap.css" rel = "stylesheet">
   <link href = "css/ripples.min.css" rel = "stylesheet">
@@ -73,8 +74,8 @@
           -webkit-transform: translateX(300%);
           -moz-transform: translateX(300%);
           transform: translateX(300%);
-          -webkit-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
-          -moz-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          -webkit-transition: -webkit-transform .8s cubic-bezier(.55, 0, .1, 1);
+          -moz-transition: -moz-transform .8s cubic-bezier(.55, 0, .1, 1);
           transition: transform .8s cubic-bezier(.55, 0, .1, 1);
       }
 
@@ -82,8 +83,8 @@
           -webkit-transform: translateX(0);
           -moz-transform: translateX(0);
           transform: translateX(0);
-          -webkit-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
-          -moz-transition: transform .8s cubic-bezier(.55, 0, .1, 1);
+          -webkit-transition: -webkit-transform .8s cubic-bezier(.55, 0, .1, 1);
+          -moz-transition: -moz-transform .8s cubic-bezier(.55, 0, .1, 1);
           transition: transform .8s cubic-bezier(.55, 0, .1, 1);
       }
 
@@ -107,8 +108,8 @@
           -webkit-transform: translateX(400%);
           -moz-transform: translateX(400%);
           transform: translateX(400%);
-          -webkit-transition: transform .8s ease-in;
-          -moz-transition: transform .8s ease-in;
+          -webkit-transition: -webkit-transform .8s ease-in;
+          -moz-transition: -moz-transform .8s ease-in;
           transition: transform .8s ease-in;
       }
 
@@ -119,7 +120,7 @@
       .staples-blue {
            color: white;
            background-color: #202080 !important;
-       }
+      }
 
       .staples-blue:hover {
           color: white;
@@ -217,17 +218,17 @@
       </div>
       <form method="post" action="/">
           <div class="modal-body">
-            <input type="text" class="form-control floating-label" placeholder="Period 1 Class" name="per1"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 2 Class" name="per2"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 3 Class" name="per3"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 4 Class" name="per4"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 5 Class" name="per5"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 6 Class" name="per6"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 7 Class" name="per7"><br />
-            <input type="text" class="form-control floating-label" placeholder="Period 8 Class" name="per8"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 1 Class" name="per1" id="conf_per1"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 2 Class" name="per2" id="conf_per2"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 3 Class" name="per3" id="conf_per3"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 4 Class" name="per4" id="conf_per4"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 5 Class" name="per5" id="conf_per5"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 6 Class" name="per6" id="conf_per6"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 7 Class" name="per7" id="conf_per7"><br />
+            <input type="text" class="form-control floating-label config-input-class" placeholder="Period 8 Class" name="per8" id="conf_per8">
           </div>
           <div class="modal-footer">
-            <input value="Cancel" name="cancel" type="reset" class="btn btn-primary" data-dismiss="modal"><input value="Apply" name="submit" type="submit" class="btn btn-primary">
+            <input value="Apply" name="config_per" type="submit" class="btn btn-primary btn-flat" style="margin:0 0 0 0;"><input value="Cancel" name="cancel" type="reset" class="btn btn-primary btn-flat" data-dismiss="modal" style="margin:0;">
           </div>
       </form>
     </div>
@@ -242,157 +243,198 @@
 <script src = "js/material.min.js"></script>
 
 <!-- Begin variable transfer from Ruby -->
-<var id="serverTime"><%=@time%></var>
-<var id="announcementsVar"><%=@announcements%></var>
-<var id="scheduleData"><%=@schedule%></var>
-<var id="userData"></var>
+<var id="userData">{
+    "1": "<%= session[:per1] %>",
+    "2": "<%= session[:per2] %>",
+    "3": "<%= session[:per3] %>",
+    "4": "<%= session[:per4] %>",
+    "5": "<%= session[:per5] %>",
+    "6": "<%= session[:per6] %>",
+    "7": "<%= session[:per7] %>",
+    "8": "<%= session[:per8] %>"
+  }</var>
 <!-- End variables -->
 
 <script>
-    var serverTimeObj = JSON.parse($("#serverTime").text());
-    var serverSecs = (+serverTimeObj.hours * 60 + serverTimeObj.mins) * 60 + serverTimeObj.secs;
-    var now = new Date();
-    var then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    var localSecs = ((now.getTime() - then.getTime()) / 1000);
-    var timeOffset = serverSecs-localSecs;
+    var serverTimeObj = {};
+    var timeOffset = 0;
+    var now = null;
+    var then = null;
+    var serverSecs = 0;
+    var localSecs = 0;
+    $.getJSON('/api/time', null, function(data) {
+        serverTimeObj = data;
+        serverSecs = (+serverTimeObj.hours * 60 + serverTimeObj.mins) * 60 + serverTimeObj.secs;
+        now = new Date();
+        then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        localSecs = ((now.getTime() - then.getTime()) / 1000);
+        timeOffset = serverSecs-localSecs;
 
-    timeOffset-=45; // Server time is 48 seconds fast compared to clocks in building
+        timeOffset-=45; // Server time is ~45 seconds fast compared to clocks in building
 
-    console.log(timeOffset);
+        console.log(timeOffset);
+    });
 
     function t(h, m) {
         return (h * 60 + m) * 60;
     }
-    schedule = JSON.parse($('#scheduleData').text());
 
-    schedule.push({
+    var schedule = {};
+
+    $.getJSON('/api/schedule?date=today', null, function(data){
+        schedule = data;
+        schedule.push({
             name: 'Contact coder if you see this',
             start_seconds: -5,
             end_seconds: -5
+        });
+    });
+
+
+    var user_schedule = {};
+
+    $.getJSON('/api/user/schedule', null, function(data){
+        user_schedule = data;
     });
 
     var percentComplete = 0;
     var currentClass = null;
 
-    var announcements = JSON.parse($("#announcementsVar").text());
-
-    $(document).ready(function () {
-        $.material.init();
-
-        var ancTxt = "\n";
-
-        for(var curAnc = 0; curAnc < announcements.length; curAnc += 2) {
-            ancTxt+='<div class="row">\n';
-            if(curAnc != announcements.length-1) {
-                ancTxt += '<div class="col-md-6">\n' +
-                            '<h3>'+announcements[curAnc].title+'</h3>\n' +
-                            '<p>'+announcements[curAnc].body+'</p>\n' +
-                          '</div>\n';
-                ancTxt += '<div class="col-md-6">\n' +
-                            '<h3>'+announcements[curAnc+1].title+'</h3>\n' +
-                            '<p>'+announcements[curAnc+1].body+'</p>\n' +
-                          '</div>\n';
-            } else {
-                ancTxt += '<div class="col-md-12">\n' +
-                            '<h3>'+announcements[curAnc].title+'</h3>\n' +
-                            '<p>'+announcements[curAnc].body+'</p>\n' +
-                          '</div>\n';
-            }
-            ancTxt+='</div>\n';
-        }
-
-
-        $('#announcementZone').html(ancTxt);
-
-        var i = 0;
-        $('.page').not("#announcements").each(function () {
-            var cls = schedule[i];
-            $(this).find('h1').first().text(cls.name);
-            i++;
-        });
-        i = 0;
-        $('.menu li span').each(function () {
-            var cls = schedule[i];
-            $(this).text(cls.name);
-            i++;
-        });
-        /* Updates Class Header */ setInterval(function () {
-            var timerHeader = $("#timerHeader");
-            if (currentClass != null ? currentClass.name != timerHeader.text() : timerHeader.text() != "No School") {
-                timerHeader.addClass("active").fadeOut(800, function () {
-                    $(this).removeClass("active");
-                    if (currentClass != null)
-                        timerHeader.text(currentClass.name);
-                    else
-                        timerHeader.text("No School");
-                    setTimeout(function () {
-                        $(this).fadeIn(800);
-                    }.bind(this), 100);
-                });
-            }
-        }, 4000);
-        /* Updates time and current class */ setInterval(function () {
-            now = new Date();
-            then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-            var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
-
-            for (var classId = 0; classId < schedule.length - 1; classId++) {
-                if (schedule[classId].start_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId].end_seconds) {
-                    currentClass = schedule[classId];
-                    conole.log(classId);
-                    break;
-                } else if (schedule[classId].end_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].start_seconds) {
-                    currentClass = {
-                        name: "Passing Time",
-                        start_seconds: schedule[classId].end_seconds,
-                        end_seconds: schedule[classId + 1].start_seconds
-                    };
-                    $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
-                    break;
-                } else {
-                    $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
-                }
-            }
-
-            hours = Math.floor(secsSinceMidnight / 60 / 60);
-            totalMins = Math.floor(secsSinceMidnight / 60);
-            min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
-            $("#clockTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
-            if (currentClass != null) {
-                $(".menu li").each(function () {
-                    if ($(this).data('target') != '#class' + (classId + 1) ||
-                            currentClass.name == "Passing Time") {
-                        $(this).removeClass('staples-blue');
-                        return;
-                    }
-
-                    $(this).addClass('staples-blue');
-                });
-                percentComplete = Math.round((secsSinceMidnight - currentClass.start_seconds) / (currentClass.end_seconds - currentClass.start_seconds) * 10000) / 100;
-
-                var timeThroughCurrentClass = currentClass.end_seconds - secsSinceMidnight;
-                var totalMins = Math.floor(timeThroughCurrentClass / 60);
-                var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
-                var sec = Math.floor(timeThroughCurrentClass % 60);
-                sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
-
-                $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");
-
-                var hours = Math.floor(currentClass.start_seconds / 60 / 60);
-                totalMins = Math.floor(currentClass.start_seconds / 60);
-                min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
-                $("#startTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
-
-                hours = Math.floor(currentClass.end_seconds / 60 / 60);
-                totalMins = Math.floor(currentClass.end_seconds / 60);
-                min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
-                $("#endTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
-            }
-        }, 20);
-        /* Sets the progress of the timer bar */ setInterval(function () {
-            $("#classProgress").css("width", percentComplete + "%")
-        }, 200);
+    var announcements = {};
+    $.getJSON('/api/announcements/today', null, function(data){
+        announcements = data;
     });
+
+    setTimeout(function (){
+        $(document).ready(function () {
+            $.material.init();
+
+            var ancTxt = "\n";
+
+            for(var curAnc = 0; curAnc < announcements.length; curAnc += 2) {
+                ancTxt+='<div class="row">\n';
+                if(curAnc != announcements.length-1) {
+                    ancTxt += '<div class="col-md-6">\n' +
+                                '<h3>'+announcements[curAnc].title+'</h3>\n' +
+                                '<p>'+announcements[curAnc].body+'</p>\n' +
+                              '</div>\n';
+                    ancTxt += '<div class="col-md-6">\n' +
+                                '<h3>'+announcements[curAnc+1].title+'</h3>\n' +
+                                '<p>'+announcements[curAnc+1].body+'</p>\n' +
+                              '</div>\n';
+                } else {
+                    ancTxt += '<div class="col-md-12">\n' +
+                                '<h3>'+announcements[curAnc].title+'</h3>\n' +
+                                '<p>'+announcements[curAnc].body+'</p>\n' +
+                              '</div>\n';
+                }
+                ancTxt+='</div>\n';
+            }
+
+
+            $('#announcementZone').html(ancTxt);
+
+            var i = 0;
+            $('.page').not("#announcements").each(function () {
+                var cls = schedule[i];
+                $(this).find('h1').first().text(cls.name + ": " + user_schedule[cls.name]);
+                i++;
+            });
+            i = 0;
+            $('.menu li span').each(function () {
+                var cls = schedule[i];
+                if( (cls.name == "1" || cls.name == "2" || cls.name == "3" || cls.name == "4" || cls.name == "5" || cls.name == "6" || cls.name == "7" || cls.name == "8") && user_schedule.code == 0) {
+                    $(this).text(cls.name + ": " + user_schedule[cls.name]);
+                } else {
+                    $(this).text(cls.name);
+                    if(user_schedule.code != 100) {
+                        console.log("Could not load your classes, error code " + user_schedule.code + " with data of " + user_schedule.err_str);
+                    }
+                }
+                i++;
+            });
+            i = 1;
+            $('.config-input-class').each(function() {
+                $(this).val(user_schedule[String(i)]);
+                i++;
+            });
+            /* Updates Class Header */ setInterval(function () {
+                var timerHeader = $("#timerHeader");
+                if (currentClass != null ? currentClass.name + ": " + user_schedule[currentClass.name] != timerHeader.text() : timerHeader.text() != "No School") {
+                    timerHeader.addClass("active").fadeOut(800, function () {
+                        $(this).removeClass("active");
+                        if (currentClass != null)
+                            timerHeader.text(currentClass.name + ": " + user_schedule[currentClass.name]);
+                        else
+                            timerHeader.text("No School");
+                        setTimeout(function () {
+                            $(this).fadeIn(800);
+                        }.bind(this), 100);
+                    });
+                }
+            }, 4000);
+            /* Updates time and current class */ setInterval(function () {
+                now = new Date();
+                then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
+
+                for (var classId = 0; classId < schedule.length - 1; classId++) {
+                    if (schedule[classId].start_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId].end_seconds) {
+                        currentClass = schedule[classId];
+                        //console.log(classId);
+                        break;
+                    } else if (schedule[classId].end_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].start_seconds) {
+                        currentClass = {
+                            name: "Passing Time",
+                            start_seconds: schedule[classId].end_seconds,
+                            end_seconds: schedule[classId + 1].start_seconds
+                        };
+                        $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
+                        break;
+                    } else {
+                        $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
+                    }
+                }
+
+                hours = Math.floor(secsSinceMidnight / 60 / 60);
+                totalMins = Math.floor(secsSinceMidnight / 60);
+                min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+                $("#clockTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+                if (currentClass != null) {
+                    $(".menu li").each(function () {
+                        if ($(this).data('target') != '#class' + (classId + 1) ||
+                                currentClass.name == "Passing Time") {
+                            $(this).removeClass('staples-blue');
+                            return;
+                        }
+                        $(this).addClass('staples-blue');
+                    });
+                    percentComplete = Math.round((secsSinceMidnight - currentClass.start_seconds) / (currentClass.end_seconds - currentClass.start_seconds) * 10000) / 100;
+
+                    var timeThroughCurrentClass = currentClass.end_seconds - secsSinceMidnight;
+                    var totalMins = Math.floor(timeThroughCurrentClass / 60);
+                    var min = totalMins == 0 ? "00" : ((totalMins < 10) ? "0" + totalMins : totalMins);
+                    var sec = Math.floor(timeThroughCurrentClass % 60);
+                    sec = sec == 0 ? "00" : ((sec < 10) ? "0" + sec : sec);
+
+                    $("#currentTime").text("-" + min + ":" + sec).css("margin-left", percentComplete + "%").css("margin-left", "-=1.5em");
+
+                    var hours = Math.floor(currentClass.start_seconds / 60 / 60);
+                    totalMins = Math.floor(currentClass.start_seconds / 60);
+                    min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+                    $("#startTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+
+                    hours = Math.floor(currentClass.end_seconds / 60 / 60);
+                    totalMins = Math.floor(currentClass.end_seconds / 60);
+                    min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
+                    $("#endTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+                }
+            }, 20);
+            /* Sets the progress of the timer bar */ setInterval(function () {
+                $("#classProgress").css("width", percentComplete + "%")
+            }, 200);
+        });
+    }, 1000);
     $(".menu li").click(function () {
         if ($(this).is('.active')) return;
         $(".menu li").removeClass("active").removeClass("shadow-z-3").addClass("shadow-z-2").find('.status-band').removeClass('btn-success');
