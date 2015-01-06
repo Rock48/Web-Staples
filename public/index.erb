@@ -132,6 +132,12 @@
           top:75px;
       }
 
+      #btn-register {
+          position: absolute;
+          left:-30px;
+          top:-10px;
+      }
+
       .staples-blue h1, .staples-blue h2 {
           color: white !important;
       }
@@ -152,9 +158,21 @@
   </div>
   <div class = "row">
     <div class = "menu col-sm-4 well">
+      <%if session[:loggedin]%>
       <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#settings-dialog" id="btn-settings">
         <span class="mdi-action-settings"></span>
       </a>
+      <a class="btn btn-fab staples-blue" data-toggle="modal" id="btn-register" href="/logout">
+        <span class="mdi-action-exit-to-app"></span>
+      </a>
+      <%else%>
+      <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#login-dialog" id="btn-settings">
+        <span class="mdi-action-input"></span>
+      </a>
+      <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#register-dialog" id="btn-register">
+        <span class="mdi-image-add-to-photos"></span>
+      </a>
+      <%end%>
       <ul>
         <li class = "active withripple shadow-z-3" data-target = "#announcements">
           <div class = "status-band btn-success"></div>
@@ -189,7 +207,7 @@
     </div>
   </div>
   <div class = "row well timer-block staples-blue">
-    <h1 id = "timerHeader">Welcome, Guest!</h1>
+    <h1 id = "timerHeader">Welcome, <%= session[:loggedin] ? @profile['fname'] : 'Guest' %>!</h1>
 
     <div style = "margin-top: 3em;">
                 <span style = "margin-left: -1.5em">
@@ -228,8 +246,51 @@
             <input type="text" class="form-control floating-label config-input-class" placeholder="Period 8 Class" name="per8" id="conf_per8">
           </div>
           <div class="modal-footer">
-            <input value="Apply" name="config_per" type="submit" class="btn btn-primary btn-flat" style="margin:0 0 0 0;"><input value="Cancel" name="cancel" type="reset" class="btn btn-primary btn-flat" data-dismiss="modal" style="margin:0;">
+            <input value="Apply" name="config_per" type="submit" class="btn btn-primary btn-flat" style="margin:0 0 0 0;"><input value="Cancel" name="cancel" type="button" class="btn btn-primary btn-flat" data-dismiss="modal" style="margin:0;">
           </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="login-dialog" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Login</h4>
+      </div>
+      <form method="post" action="/">
+        <div class="modal-body">
+          <input type="text" class="form-control floating-label config-input-class" placeholder="Email Address" name="email"><br />
+          <input type="password" class="form-control floating-label config-input-class" placeholder="Password" name="paswd">
+        </div>
+        <div class="modal-footer">
+          <input value="Submit" name="login" type="submit" class="btn btn-primary btn-flat" style="margin:0 0 0 0;"><input value="Cancel" name="cancel" type="reset" class="btn btn-primary btn-flat" data-dismiss="modal" style="margin:0;">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="register-dialog" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Register</h4>
+      </div>
+      <form method="post" action="/">
+        <div class="modal-body">
+          <input type="text" class="form-control floating-label config-input-class" placeholder="Email Address" name="email"><br />
+          <input type="text" class="form-control floating-label config-input-class" placeholder="First Name" name="fname"><br />
+          <input type="text" class="form-control floating-label config-input-class" placeholder="Last Name" name="lname"><br />
+          <input type="password" class="form-control floating-label config-input-class" placeholder="Password" name="paswd"><br />
+          <input type="password" class="form-control floating-label config-input-class" placeholder="Repeat Password" name="paswd_repeat"><br />
+        </div>
+        <div class="modal-footer">
+          <input value="Submit" name="register" type="submit" class="btn btn-primary btn-flat" style="margin:0 0 0 0;"><input value="Cancel" name="cancel" type="reset" class="btn btn-primary btn-flat" data-dismiss="modal" style="margin:0;">
+        </div>
       </form>
     </div>
   </div>
@@ -241,19 +302,6 @@
 
 <script src = "js/ripples.min.js"></script>
 <script src = "js/material.min.js"></script>
-
-<!-- Begin variable transfer from Ruby -->
-<var id="userData">{
-    "1": "<%= session[:per1] %>",
-    "2": "<%= session[:per2] %>",
-    "3": "<%= session[:per3] %>",
-    "4": "<%= session[:per4] %>",
-    "5": "<%= session[:per5] %>",
-    "6": "<%= session[:per6] %>",
-    "7": "<%= session[:per7] %>",
-    "8": "<%= session[:per8] %>"
-  }</var>
-<!-- End variables -->
 
 <script>
     var serverTimeObj = {};
@@ -281,7 +329,7 @@
 
     var schedule = {};
 
-    $.getJSON('/api/schedule?date=today', null, function(data){
+    $.getJSON('/api/schedule?date=today', null, function(data) {
         schedule = data;
         schedule.push({
             name: 'Contact coder if you see this',
@@ -293,7 +341,7 @@
 
     var user_schedule = {};
 
-    $.getJSON('/api/user/schedule', null, function(data){
+    $.getJSON('/cur_auth_sched', null, function(data) {
         user_schedule = data;
     });
 
@@ -301,8 +349,13 @@
     var currentClass = null;
 
     var announcements = {};
-    $.getJSON('/api/announcements/today', null, function(data){
+    $.getJSON('/api/announcements/today', null, function(data) {
         announcements = data;
+    });
+
+    var userProfile = {};
+    $.getJSON('/cur_usr_profile', null, function(data) {
+        userProfile = data;
     });
 
     setTimeout(function (){
@@ -434,7 +487,7 @@
                 $("#classProgress").css("width", percentComplete + "%")
             }, 200);
         });
-    }, 1000);
+    }, 2000);
     $(".menu li").click(function () {
         if ($(this).is('.active')) return;
         $(".menu li").removeClass("active").removeClass("shadow-z-3").addClass("shadow-z-2").find('.status-band').removeClass('btn-success');
