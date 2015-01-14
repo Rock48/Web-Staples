@@ -9,7 +9,7 @@ set :bind, '0.0.0.0'
 set :views, Proc.new { File.join(root, 'public') }
 enable :sessions
 
-VALID_EMAIL_REGEX = /^[a-z 0-9]@[a-z 0-9].[a-z]/
+VALID_EMAIL_REGEX = /^[a-z 0-9 \- _]@[a-z 0-9].[a-z]/
 
 def email_valid?(email)
   email =~ VALID_EMAIL_REGEX
@@ -46,11 +46,13 @@ end
 
 get '/' do
     session[:loggedin] |= false
+
     # noinspection RubyArgCount
     @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
-    puts @schedule_len
+
     if session[:loggedin]
       response = Net::HTTP.get(URI('http://localhost:4567/api/user/profile?authkey='+session[:authkey]))
+
       # noinspection RubyArgCount
       @profile = JSON.parse!(response)
     end
@@ -62,6 +64,7 @@ post '/' do
       Net::HTTP.post_form(URI('http://localhost:4567/api/user/schedule/update'), :authkey => session[:authkey], :per1 => params[:per1], :per2 => params[:per2], :per3 => params[:per3], :per4 => params[:per4], :per5 => params[:per5], :per6 => params[:per6], :per7 => params[:per7], :per8 => params[:per8])
       redirect('/')
     end
+
     if params[:login] == 'Submit'
       response = Net::HTTP.post_form(URI('http://localhost:4567/api/user/auth'), :email => params[:email], :paswd => params[:paswd]).body
 
@@ -75,6 +78,20 @@ post '/' do
         redirect('/')
       end
 
+      if res['code'] == ERROR_AUTH_FAILED
+        @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
+        @message = 'Invalid Email or Password'
+
+        return erb :index
+      end
+
+      if res['code'] == ERROR_CODE_INVALID_DATA
+        @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
+        @message = 'You must enter an email and a password'
+
+        return erb :index
+      end
+
       return res.inspect
     end
     if params[:register] == 'Submit'
@@ -86,6 +103,12 @@ post '/' do
       if res['code'] == CODE_SUCCESS
         redirect('/')
       end
+      if res['code'] == ERROR_CODE_INVALID_DATA
+        @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
+        @message = '<i>ALL</i> Fields are required'
+
+        return erb :index
+      end
 
       return 'Error <br>' + response
     end
@@ -95,18 +118,21 @@ get '/cur_auth_sched' do
   if session[:loggedin]
     return Net::HTTP.get(URI('http://localhost:4567/api/user/schedule?authkey='+session[:authkey]))
   end
-  return '{"1":"","2":"","3":"","4":"","5":"","6":"","7":"","8":""}'
+
+  return '{"1":"","2":"","3":"","4":"","5":"","6":"","7":"","8":"",code:1}'
 end
 
 get '/cur_usr_profile' do
   if session[:loggedin]
     return Net::HTTP.get(URI('http://localhost:4567/api/user/profile?authkey='+session[:authkey]))
   end
+
   return '{"fname": "Guest", "lname": "", "email": ""}'
 end
 
 get '/logout' do
     Net::HTTP.post_form(URI('http://localhost:4567/api/user/deauth'), :authkey => session[:authkey])
+
     session.clear
     session[:logged_in] |= false
     redirect('/')

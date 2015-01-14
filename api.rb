@@ -1,4 +1,4 @@
-
+# TODO: homework / notes
 get '/api/time' do
   begin
     return open('https://tv.csapp.westport.k12.ct.us/api/time/now', :ssl_ca_cert => CRT_FILE).read
@@ -23,11 +23,12 @@ end
 
 get '/api/schedule' do
   begin
-
     if params[:date] == 'today'
       return open('https://tv.csapp.westport.k12.ct.us/api/schedule/today', :ssl_ca_cert => CRT_FILE).read
     end
+
     date = params[:date].match(/\b[1-3][0-9]{3}-([1][0-2]|[1-9])-([1-2][0-9]|3[0-1]|[1-9])\b/)
+
     if date
       date_split = params[:date].split('-')
 
@@ -49,6 +50,7 @@ end
 get '/api/user/schedule' do
   if params[:authkey]
     schedule = DB[:schedules].where(:uid => DB[:authkeys].where(:key => sha512("#{params[:authkey]}#{AUTH_KEY}")).first[:uid]).first
+
     # noinspection RubyStringKeysInHashInspection
     return JSON.generate({
                              :code => CODE_SUCCESS,
@@ -78,6 +80,7 @@ post '/api/user/schedule/update' do
                              :code_str => 'Invalid Auth Key or Database error (Try auth/login again)'
                          })
   end
+
   usr_sched.update(
       :per1 => params[:per1],
       :per2 => params[:per2],
@@ -88,6 +91,7 @@ post '/api/user/schedule/update' do
       :per7 => params[:per7],
       :per8 => params[:per8]
   )
+
   return JSON.generate({
                            :code => CODE_SUCCESS,
                            :code_str => 'Success',
@@ -102,24 +106,35 @@ post '/api/user/new' do
                              :code_str => 'DATA_PASWD_MISSING'
                          })
   end
+
   if params[:email] == nil
     return JSON.generate({
                              :code => ERROR_CODE_INVALID_DATA,
                              :code_str => 'DATA_EMAIL_MISSING'
                          })
   end
+
   if params[:fname] == nil
     return JSON.generate({
                              :code => ERROR_CODE_INVALID_DATA,
                              :code_str => 'DATA_FNAME_MISSING'
                          })
   end
+
   if params[:lname] == nil
     return JSON.generate({
                              :code => ERROR_CODE_INVALID_DATA,
                              :code_str => 'DATA_LNAME_MISSING'
                          })
   end
+
+  if params[:email] == '' || params[:lname] == '' || params[:fname] == '' || params[:paswd] == ''
+    return JSON.generate({
+                             :code => ERROR_CODE_INVALID_DATA,
+                             :code_str => 'DATA_BLANK'
+                         })
+  end
+
   if email_valid?(params[:email])
     return JSON.generate({
                              :code => ERROR_CODE_INVALID_DATA,
@@ -127,6 +142,7 @@ post '/api/user/new' do
                              :info => "#{params[:email]} did not match regexp #{VALID_EMAIL_REGEX.to_s}."
                          })
   end
+
   unless DB[:users].where(:email => params[:email]).empty?
     return JSON.generate({
                              :code => ERROR_USER_EXISTS,
@@ -146,6 +162,7 @@ post '/api/user/new' do
         :lname => params[:lname]
 
     )
+
     DB[:schedules].insert(
         :uid => id,
         'per1' => '',
@@ -169,7 +186,7 @@ post '/api/user/new' do
                            :code_str => 'Success'
                        })
 end
-# yee todo
+
 post '/api/user/deauth' do
   unless params[:authkey]
     return JSON.generate({
@@ -177,6 +194,7 @@ post '/api/user/deauth' do
                              :code_str => 'Lol what are you thinking? You need something to de-auth'
                          })
   end
+
   begin
     DB[:authkeys].where(:key => params[:authkey]).delete
   rescue
@@ -185,6 +203,7 @@ post '/api/user/deauth' do
                              :code_str => 'Invalid auth key or already de-authed'
                          })
   end
+
   return JSON.generate({
                            :code => CODE_SUCCESS,
                            :code_str => 'De-Authorization of auth key ' + params[:authkey] + ' successful'
@@ -192,6 +211,13 @@ post '/api/user/deauth' do
 end
 
 post '/api/user/auth' do
+  if params[:email] == '' || params[:paswd] == ''
+    return JSON.generate({
+                             :code => ERROR_CODE_INVALID_DATA,
+                             :code_str => 'DATA_BLANK'
+                         })
+  end
+
   user_dataset = DB[:users].where(:email=>params[:email])
 
   if user_dataset.empty?
@@ -200,6 +226,7 @@ post '/api/user/auth' do
                              :code_str => 'ERROR_AUTH_FAILED'
                          })
   end
+
   user = user_dataset.first
 
   salt = user[:salt]
@@ -239,6 +266,7 @@ get '/api/user/profile' do
                                  :code_str => 'AuthKey expired or non-existent'
                              })
       end
+
       return JSON.generate({
                                :code => ERROR_DATABASE,
                                :code_str => 'ERROR_DATABASE',
@@ -266,7 +294,6 @@ get '/api/user/profile' do
                            :code_str => 'AUTHENTICATION REQUIRED'
                        })
 end
-
 # Public auth key
 get '/api/user/auth/public' do
   return AUTH_KEY

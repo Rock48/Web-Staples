@@ -3,7 +3,7 @@
   <meta name = "viewport" content = "width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/>
   <meta name = "mobile-web-app-capable" content = "yes">
   <meta name = "theme-color" content="#202080">
-  <!-- TODO: Use new scheme for homescreen adding -->
+  <!-- TODO: Use new method of adding to homescreen -->
   <link href = "css/bootstrap.css" rel = "stylesheet">
   <link href = "css/ripples.min.css" rel = "stylesheet">
   <link href = "css/material-wfont.min.css" rel = "stylesheet">
@@ -148,27 +148,29 @@
   </style>
 </head>
 <body>
-<!-- Your site -->
 <br/>
-
 <div class = "container">
   <div class = "row well staples-blue" style="padding-top: 1.7em; height:8em">
       <h1 class = "" style="position: absolute;">WebStaples<span class="hidden-xs">: Web Port of MyStaples</span></h1><h1 class="text-right" id="clockTime"></h1>
       <hr />
   </div>
+  <!-- TODO: Change FAB's to have only one on screen, (tabs in login popup?) -->
   <div class = "row">
     <div class = "menu col-sm-4 well">
       <%if session[:loggedin]%>
       <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#settings-dialog" id="btn-settings">
         <span class="mdi-action-settings"></span>
       </a>
+
       <a class="btn btn-fab staples-blue" data-toggle="modal" id="btn-register" href="/logout">
         <span class="mdi-action-exit-to-app"></span>
       </a>
+
       <%else%>
       <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#login-dialog" id="btn-settings">
         <span class="mdi-action-input"></span>
       </a>
+
       <a class="btn btn-fab staples-blue" data-toggle="modal" data-target="#register-dialog" id="btn-register">
         <span class="mdi-image-add-to-photos"></span>
       </a>
@@ -188,26 +190,25 @@
         <% end %>
       </ul>
     </div>
+
     <div class = "pages col-sm-8">
       <div class = "well page active" id = "announcements">
         <h1 class="modal-header">Today's Announcements</h1>
         <span id="announcementZone">
-            <div class="row">
-              <div class="col-lg-6">
-              </div>
-            </div>
         </span>
       </div>
+
       <% @schedule_len.times do |i| %>
-      <div class = "well page" id = "class<%=i+1%>" style = "display: none;">
-        <h1 class="modal-header">Class <%=i+1%></h1>
-        <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
-      </div>
+          <div class = "well page" id = "class<%=i+1%>" style = "display: none;">
+            <h1 class="modal-header">Class <%=i+1%></h1>
+            <textarea class = "form-control floating-label notes" placeholder = "Homework" rows = "5"></textarea>
+          </div>
       <% end %>
     </div>
   </div>
+
   <div class = "row well timer-block staples-blue">
-    <h1 id = "timerHeader">Welcome, <%= session[:loggedin] ? @profile['fname'] : 'Guest' %>!</h1>
+    <h1 id = "timerHeader"><% if @message == nil %>Welcome, <%= session[:loggedin] ? @profile['fname'] : 'Guest' %>!<% else %><%= @message %><% end %></h1>
 
     <div style = "margin-top: 3em;">
                 <span style = "margin-left: -1.5em">
@@ -218,6 +219,7 @@
         <div class = "progress-bar progress-bar-material-blue" id = "classProgress" style = "width: 0;"></div>
       </div>
     </div>
+
     <table style = "width:100%;">
       <tr>
         <td id = "startTime" style = "color: lightgrey;">0:00</td>
@@ -296,7 +298,6 @@
   </div>
 </div>
 
-<!-- Your site ends -->
 <script src = "//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
@@ -304,21 +305,27 @@
 <script src = "js/material.min.js"></script>
 
 <script>
+    /* An offset of the server time, allows for calibration to bell time */
+    var GLOBAL_TIME_OFFSET = -37;
+
     var serverTimeObj = {};
     var timeOffset = 0;
+
     var now = null;
     var then = null;
     var serverSecs = 0;
     var localSecs = 0;
+
     $.getJSON('/api/time', null, function(data) {
         serverTimeObj = data;
         serverSecs = (+serverTimeObj.hours * 60 + serverTimeObj.mins) * 60 + serverTimeObj.secs;
+
         now = new Date();
         then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
         localSecs = ((now.getTime() - then.getTime()) / 1000);
-        timeOffset = serverSecs-localSecs;
 
-        timeOffset-=45; // Server time is ~45 seconds fast compared to clocks in building
+        timeOffset = serverSecs-localSecs;
+        timeOffset-=GLOBAL_TIME_OFFSET;
 
         console.log(timeOffset);
     });
@@ -328,7 +335,6 @@
     }
 
     var schedule = {};
-
     $.getJSON('/api/schedule?date=today', null, function(data) {
         schedule = data;
         schedule.push({
@@ -338,9 +344,7 @@
         });
     });
 
-
     var user_schedule = {};
-
     $.getJSON('/cur_auth_sched', null, function(data) {
         user_schedule = data;
     });
@@ -366,6 +370,7 @@
 
             for(var curAnc = 0; curAnc < announcements.length; curAnc += 2) {
                 ancTxt+='<div class="row">\n';
+
                 if(curAnc != announcements.length-1) {
                     ancTxt += '<div class="col-md-6">\n' +
                                 '<h3>'+announcements[curAnc].title+'</h3>\n' +
@@ -381,6 +386,7 @@
                                 '<p>'+announcements[curAnc].body+'</p>\n' +
                               '</div>\n';
                 }
+
                 ancTxt+='</div>\n';
             }
 
@@ -390,12 +396,14 @@
             var i = 0;
             $('.page').not("#announcements").each(function () {
                 var cls = schedule[i];
-                $(this).find('h1').first().text(cls.name + ": " + user_schedule[cls.name]);
+                $(this).find('h1').first().text(user_schedule.code == 0 ? cls.name + ": " + user_schedule[cls.name] : cls.name);
                 i++;
             });
+
             i = 0;
             $('.menu li span').each(function () {
                 var cls = schedule[i];
+
                 if( (cls.name == "1" || cls.name == "2" || cls.name == "3" || cls.name == "4" || cls.name == "5" || cls.name == "6" || cls.name == "7" || cls.name == "8") && user_schedule.code == 0) {
                     $(this).text(cls.name + ": " + user_schedule[cls.name]);
                 } else {
@@ -404,37 +412,55 @@
                         console.log("Could not load your classes, error code " + user_schedule.code + " with data of " + user_schedule.err_str);
                     }
                 }
+
                 i++;
             });
+
             i = 1;
             $('.config-input-class').each(function() {
                 $(this).val(user_schedule[String(i)]);
                 i++;
             });
-            /* Updates Class Header */ setInterval(function () {
+
+            /* Updates Class Header */
+            setInterval(function () {
                 var timerHeader = $("#timerHeader");
-                if (currentClass != null ? currentClass.name + ": " + user_schedule[currentClass.name] != timerHeader.text() : timerHeader.text() != "No School") {
+
+                if (currentClass != null ? ( user_schedule.code == 0 ? (currentClass.name + ": " + user_schedule[currentClass.name] != timerHeader.text()) : (currentClass.name != timerHeader.text())) : timerHeader.text() != "No School") {
                     timerHeader.addClass("active").fadeOut(800, function () {
                         $(this).removeClass("active");
+
                         if (currentClass != null)
-                            timerHeader.text(currentClass.name + ": " + user_schedule[currentClass.name]);
-                        else
+                            if(user_schedule.code == 0 && currentClass.name != "Passing Time") {
+                                timerHeader.text(currentClass.name + ": " + user_schedule[currentClass.name]);
+                            } else {
+                                timerHeader.text(currentClass.name)
+                            }
+                        else {
                             timerHeader.text("No School");
+                        }
+
                         setTimeout(function () {
                             $(this).fadeIn(800);
                         }.bind(this), 100);
                     });
                 }
             }, 4000);
-            /* Updates time and current class */ setInterval(function () {
+
+            /* Updates time and current class */
+            setInterval(function () {
                 now = new Date();
                 then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
                 var secsSinceMidnight = ((now.getTime() - then.getTime()) / 1000) + timeOffset;
 
+                var changed = false;
+
                 for (var classId = 0; classId < schedule.length - 1; classId++) {
                     if (schedule[classId].start_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId].end_seconds) {
                         currentClass = schedule[classId];
-                        //console.log(classId);
+
+                        changed = true;
+
                         break;
                     } else if (schedule[classId].end_seconds < secsSinceMidnight && secsSinceMidnight < schedule[classId + 1].start_seconds) {
                         currentClass = {
@@ -442,6 +468,9 @@
                             start_seconds: schedule[classId].end_seconds,
                             end_seconds: schedule[classId + 1].start_seconds
                         };
+
+                        changed = true;
+
                         $('.menu li[data-target="#class' + (classId + 1) + '"]').addClass('btn-material-grey');
                         break;
                     } else {
@@ -449,10 +478,15 @@
                     }
                 }
 
+                if(changed == false) {
+                    currentClass = null;
+                }
+
                 hours = Math.floor(secsSinceMidnight / 60 / 60);
                 totalMins = Math.floor(secsSinceMidnight / 60);
                 min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
                 $("#clockTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+
                 if (currentClass != null) {
                     $(".menu li").each(function () {
                         if ($(this).data('target') != '#class' + (classId + 1) ||
@@ -462,6 +496,7 @@
                         }
                         $(this).addClass('staples-blue');
                     });
+
                     percentComplete = Math.round((secsSinceMidnight - currentClass.start_seconds) / (currentClass.end_seconds - currentClass.start_seconds) * 10000) / 100;
 
                     var timeThroughCurrentClass = currentClass.end_seconds - secsSinceMidnight;
@@ -481,13 +516,24 @@
                     totalMins = Math.floor(currentClass.end_seconds / 60);
                     min = totalMins == 0 ? "00" : ((totalMins % 60 < 10) ? "0" + totalMins % 60 : totalMins % 60);
                     $("#endTime").text((hours > 12 ? hours - 12 : hours) + ":" + min + (hours >= 12 ? " PM" : " AM"));
+                } else {
+                    $("#startTime").text("0:00");
+                    $("#endTime").text("0:00");
+                    $("#currentTime").text("-0:00").css("margin-left", 0 + "%").css("margin-left", "-=1.5em");
                 }
             }, 20);
-            /* Sets the progress of the timer bar */ setInterval(function () {
-                $("#classProgress").css("width", percentComplete + "%")
+
+            /* Sets the progress of the timer bar */
+            setInterval(function () {
+                if(currentClass != null) {
+                    $("#classProgress").css("width", percentComplete + "%")
+                } else {
+                    $("#classProgress").css("width", 0 + "%")
+                }
             }, 200);
         });
     }, 2000);
+
     $(".menu li").click(function () {
         if ($(this).is('.active')) return;
         $(".menu li").removeClass("active").removeClass("shadow-z-3").addClass("shadow-z-2").find('.status-band').removeClass('btn-success');
@@ -501,6 +547,7 @@
         setTimeout(function () {
             oldPage.fadeOut(0);
             target.fadeIn(0);
+
             target.addClass('active');
         }, 400);
     });
