@@ -161,7 +161,7 @@ post '/api/user/new' do
   end
 
   # makes sure a valid email address was used
-  if email_valid?(params[:email])
+  unless email_valid?(params[:email])
     return JSON.generate({
                              :code => ERROR_CODE_INVALID_DATA,
                              :code_str => 'DATA_EMAIL_INVALID',

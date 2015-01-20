@@ -9,10 +9,11 @@ set :bind, '0.0.0.0'
 set :views, Proc.new { File.join(root, 'public') }
 enable :sessions
 
-VALID_EMAIL_REGEX = /^[a-z 0-9 \- _]@[a-z 0-9].[a-z]/
+# email regular expression
+VALID_EMAIL_REGEX = /^[a-z A-Z 0-9 \- _ # \$ % & ' \* \+ \/ = \? \^ _ ` \{ \| \} ~]@[a-z A-Z 0-9].[a-z]/
 
 def email_valid?(email)
-  email =~ VALID_EMAIL_REGEX
+  (email =~ VALID_EMAIL_REGEX) != nil
 end
 
 #BEGIN RETURN CODE DEFINITIONS
@@ -48,7 +49,7 @@ WORLD_LANGUAGES = 13
 # noinspection SpellCheckingInspection
 AUTH_KEY = 'aka8H3DSafa98xq401s378alAiAGD6GApO2hjAHGijh3Hu2'
 
-CRT_FILE = File.join('C:', 'Ruby200-x64', 'gd_bundle-g2.crt').to_s
+CRT_FILE = './gd_bundle-g2.crt'
 
 DB = Sequel.connect('sqlite://webstaples.db')
 
@@ -122,6 +123,12 @@ post '/' do
       return res.inspect
     end
     if params[:register] == 'Submit'
+      unless params[:paswd] == params[:paswd_repeat]
+        @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
+        @message = 'Passwords don\'t match'
+        return erb :index
+      end
+
       response = Net::HTTP.post_form(URI('http://localhost:4567/api/user/new'), :email => params[:email], :paswd => params[:paswd], :fname => params[:fname], :lname => params[:lname]).body
 
       # noinspection RubyArgCount
@@ -132,8 +139,11 @@ post '/' do
       end
       if res['code'] == ERROR_CODE_INVALID_DATA
         @schedule_len = JSON.parse!(open('http://localhost:4567/api/schedule?date=today').read).length
-        @message = '<i>ALL</i> Fields are required'
-
+        if res['code_str'] == 'DATA_EMAIL_INVALID'
+          @message = 'You must enter a valid email'
+        else
+          @message = '<i>ALL</i> Fields are required'
+        end
         return erb :index
       end
 
